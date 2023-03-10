@@ -4,9 +4,20 @@ body,
   height: 100%;
 }
 
+@font-face {
+  font-family: 'Apple II';
+  src: url('../../fonts/font.ttf');
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0px;
+  color: #12ff1e;
+  font-size: 10pt;
+  font-family: 'Apple II';
+  line-height: 2vh;
+  background-color: #030e00;
+  text-shadow: 0 0 5px rgba(0, 255, 47, 0.471);
+  margin-left: .5em;
+  margin-right: .5em;
 }
 
 img {
@@ -29,11 +40,11 @@ Button
 .btn {
   display: inline-block;
   padding: 10px 20px;
-  border-color: #014041;
+  border-color: #12ff1e;
   border-width: 1px 1px 3px;
   border-radius: 4px;
-  background-color: #00acb0;
-  color: #f8f8f8;
+  background-color: #030e00;
+  color: #12ff1e;
   font-size: 1.1rem;
   outline: 0;
   cursor: pointer;
@@ -55,7 +66,7 @@ Button
 }
 
 .btn:hover {
-  background-color: #008183;
+  background-color: #0e4000;
   text-decoration: none;
 }
 
@@ -72,8 +83,8 @@ Button
 
 .btn_asLink:hover {
   background-color: transparent;
-  border-color: #008183;
-  color: #008183;
+  border-color: #12ff1e;
+  color: #030e00;
 }
 
 /* --------------------------------------------------------------------------------
@@ -85,9 +96,9 @@ Alert
   padding: 15px 10px;
   margin: 15px 0;
   border: 2px solid #e01616;
-  background-color: #efefef;
+  background-color: #12ff1e;
   border-radius: 3px;
-  color: #e01616;
+  color: #030e00;
   font-size: 0.8rem;
 }
 
@@ -97,11 +108,11 @@ Form Treatment
 
 .formPanel {
   box-sizing: border-box;
-  width: 400px;
+  width: 450px;
   max-width: 100%;
   padding: 25px;
   margin: 0 auto 20px;
-  background-color: #efefef;
+  /* background-color: #030e00; */
   border-radius: 3px;
   box-shadow: 0 1px 2px rgb(0, 0, 0, 0.4);
 }
@@ -109,4 +120,7 @@ Form Treatment
 input {
   margin: 5px;
   margin-bottom: 10px;
+  background-color: #030e00;
+  color: #12ff1e;
+  font-family: 'Apple II';
 }

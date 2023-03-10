@@ -1,12 +1,20 @@
 .nav {
-  /* flex box layout */
+  border: 1px solid #12ff1e;
+  color : #12ff1e;
+  background-color: #030e00;
+  font-size: 1em;
+  font-family: 'Apple II';
+  width: stretch;
+  /* padding: .5em; */
+  
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: row;
+  justify-self: flex-end;
+  justify-content: space-evenly;
+}
 
-  margin: 0 0 30px;
-  background-color: #00acb0;
-  overflow: hidden;
+.link {
+  color : #12ff1e;
 }
 
 .nav a {
@@ -16,15 +24,20 @@
 .nav-title {
   font-size: 24px;
   font-weight: 700;
-  color: #f2f2f2;
-  padding-left: 10px;
-  margin: 0;
+  color: #12ff1e;
+  /* padding-left: 10px; */
+  align-self: center;
+  /* padding: 10px 2px 5px 2px; */
 }
+/* 
+.nav-title:hover {
+  background-color: #0e4000;
+} */
 
 .navLink {
   display: inline-block;
-  color: #f2f2f2;
-  background-color: #00acb0;
+  color: #12ff1e;
+  background-color: #030e00;
   text-align: center;
   padding: 24px 10px;
   text-decoration: none;
@@ -38,5 +51,9 @@
 }
 
 .navLink:hover {
-  background-color: #008183;
+  background-color: #0e4000;
+}
+
+h1 {
+  font-size: 16pt;
 }

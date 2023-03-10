@@ -1,0 +1,8 @@
+.history {
+    border: 1px solid #12ff1e;
+    padding-left: 1em;
+    padding-right: 1em;
+    height: 33vh;
+    overflow: auto;
+    line-height: 2em;
+}

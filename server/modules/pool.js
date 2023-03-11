@@ -28,7 +28,9 @@ else {
     pool = new pg.Pool({
         host: 'localhost',
         port: 5432,
-        database: 'cloud_quest',   // 	💥 Change this to the name of your database!
+        database: 'cloud_quest',
+        user: process.env.SQL_USER,
+        password: process.env.SQL_PASSWORD
     });
 }
 

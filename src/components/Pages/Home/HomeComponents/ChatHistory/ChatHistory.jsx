@@ -1,9 +1,12 @@
 import './ChatHistory.css'
 import { useSelector } from 'react-redux';
+import { useRef } from 'react';
 
-function ChatHistory({ historyEndRef }) {
+function ChatHistory() {
 
     let messages = useSelector(store => store.history);
+
+    const historyEndRef = useRef(null)
 
     const scrollToBottom = () => {
         historyEndRef.current?.scrollIntoView()
@@ -11,9 +14,9 @@ function ChatHistory({ historyEndRef }) {
 
     return (
         <div className="history">
-            {/* {messages.map((message) => {
-                return <p key={message.id} >{message.message}</p>
-            })} */}
+            {messages.map((message, i) => {
+                return <p key={i} >{message.message}</p>
+            })}
             <div ref={historyEndRef} />
         </div>
     );

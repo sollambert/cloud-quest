@@ -1,7 +1,10 @@
 import './ChatInput.css'
 import {useState} from 'react';
+import { useDispatch } from 'react-redux';
 
-function ChatInput({ send }) {
+function ChatInput() {
+
+    const dispatch = useDispatch();
 
     const [chatBuffer, setChatBuffer] = useState('');
 
@@ -11,8 +14,13 @@ function ChatInput({ send }) {
 
     const handleKeyDown = (event) => {
         if (event.key == "Enter") {
-            send(chatBuffer, clearInput);
+            sendCommand(chatBuffer);
         }
+    }
+
+    function sendCommand(message) {
+        dispatch({type: "PARSE_COMMAND", payload: message})
+        clearInput()
     }
 
     const clearInput = () => {

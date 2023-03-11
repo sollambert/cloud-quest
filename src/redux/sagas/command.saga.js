@@ -1,25 +1,18 @@
-import { useSelector } from 'react-redux';
-import ignored from '../modules/ignored';
+import { select, put, takeLatest } from 'redux-saga/effects';
+import ignored from '../../modules/ignored';
 
-const gameState = useSelector(store => store.gameState);
+const gameStateSelector = (state) => state.gameState;
+const gameState = select(gameStateSelector);
 
-const useCommand = (message) => {
-    const response = parseCommand(message);
-
-    const updateHistory = (message, response) => {
-        dispatch({
-            type: 'ADD_HISTORY',
-            payload: { message: message }
-        })
-        dispatch({
-            type: 'ADD_HISTORY',
-            payload: { message: response.data.result }
-        })
-        resolve();
-    }
+function* useCommand(action) {
+    const response = yield parseCommand(action.payload);
+    console.log(response);
+    yield put({type: 'ADD_HISTORY', payload: { message: action.payload }})
+    yield put({type: 'ADD_HISTORY', payload: { message: response.result }})
 }
 
 function parseCommand(message) {
+    // const gameState = useSelector(store => store.gameState);
     message = message.toLowerCase();
     let split = message.split(' ').filter(
         (element) => {
@@ -41,9 +34,9 @@ function parseCommand(message) {
                 response.result = `You are already there.`
                 return response;
             } if (gameState.room.exits.includes(split[1])) {
-                pool.query(`UPDATE player_data
-                SET room = $2
-                WHERE id=$1`, [1, split[1]])
+                // pool.query(`UPDATE player_data
+                // SET room = $2
+                // WHERE id=$1`, [1, split[1]])
                 response.result = `You go to the ${split[1]}.`
                 return response;
             } else {
@@ -120,3 +113,9 @@ function parseCommand(message) {
     }
     return response;
 }
+
+function* commandSaga() {
+    yield takeLatest("PARSE_COMMAND", useCommand);
+}
+
+export default commandSaga;

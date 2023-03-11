@@ -1,5 +1,4 @@
 import { put, select, takeLatest } from 'redux-saga/effects';
-import gameState from '../reducers/gameState.reducer';
 import axios from 'axios';
 
 const gameStateSelector = (state) => state.gameState;

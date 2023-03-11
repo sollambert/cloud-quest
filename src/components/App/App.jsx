@@ -6,6 +6,7 @@ import {
   Switch,
 } from 'react-router-dom';
 
+import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Nav from '../Nav/Nav';
@@ -19,10 +20,14 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+import Home from '../Pages/Home/Home';
 
 import './App.css';
 
 function App() {
+
+  const historyEndRef = useRef(null)
+
   const dispatch = useDispatch();
 
   const user = useSelector(store => store.user);
@@ -55,9 +60,9 @@ function App() {
           <ProtectedRoute
             // logged in shows UserPage else shows LoginPage
             exact
-            path="/user"
+            path="/home"
           >
-            <UserPage />
+            <Home messages={history} historyEndRef={historyEndRef}/>
           </ProtectedRoute>
 
           <ProtectedRoute

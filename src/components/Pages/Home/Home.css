@@ -1,0 +1,19 @@
+.chat {
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+.display {
+    display: flex;
+    flex-direction: column;
+}
+
+.images {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.chat-container {
+    justify-content: flex-end;
+}

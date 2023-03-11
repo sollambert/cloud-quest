@@ -54,6 +54,29 @@
   background-color: #0e4000;
 }
 
+.logOutButton {
+  display: inline-block;
+  color: #12ff1e;
+  background-color: #030e00;
+  text-align: center;
+  padding: 24px 10px;
+  text-decoration: none;
+  font-size: 15px;
+
+  /* these last two make the logout button in
+  the nav bar look like another link */
+  font-family: 'Apple II';
+  text-shadow: 0 0 5px rgba(0, 255, 47, 0.471);
+  border-width: 1px;
+  border-color: #12ff1e;
+  cursor: pointer;
+  margin: 0px;
+}
+
+.logOutButton:hover {
+  background-color: #0e4000;
+}
+
 h1 {
   font-size: 16pt;
 }

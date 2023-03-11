@@ -8,7 +8,7 @@ function* initializeGameState() {
     let response = yield axios.get('/api/saves/new');
     // console.log(response.data);
     yield put({type: "SET_GAME_STATE", payload: response.data});
-    yield put({type: 'ADD_HISTORY', payload: {message: response.data.rooms[0].room_description}})
+    yield put({type: 'ADD_HISTORY', payload: response.data.rooms[0].room_description})
 }
 
 function* loadGame(action) {

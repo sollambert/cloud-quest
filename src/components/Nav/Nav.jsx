@@ -28,8 +28,9 @@ function Nav() {
               Home
             </Link>
 
-            <Link className="navLink" to="/info">
-              Info Page
+            {/* link to help page */}
+            <Link className="navLink" to="/help">
+              Help
             </Link>
 
           </>

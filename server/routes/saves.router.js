@@ -14,7 +14,8 @@ router.get('/', (req, res) => {
 */
 router.get('/new', (req, res) => {
     const roomQuery = `
-    SELECT * FROM rooms;
+    SELECT * FROM rooms
+    ORDER BY id;
     `
     pool.query(roomQuery)
     .then((dbRes) => {

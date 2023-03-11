@@ -9,8 +9,9 @@ function* useCommand(action) {
     console.log(gameState);
     const response = yield parseCommand(action.payload);
     console.log(response);
-    yield put({type: 'ADD_HISTORY', payload: { message: action.payload }})
-    yield put({type: 'ADD_HISTORY', payload: { message: response.result }})
+    yield put({type: 'ADD_HISTORY', payload: action.payload })
+    yield put({type: 'ADD_HISTORY', payload:response.result })
+    if (response.callback) {yield response.callback()}
 }
 
 function* parseCommand(message) {
@@ -40,9 +41,15 @@ function* parseCommand(message) {
                 response.result = `You are already there.`
                 return response;
             } if (room.room_exits.exits.includes(split[1])) {
-                yield put({type: "UPDATE_LOCATION", payload: split[1]})
                 response.result = `You go to the ${split[1]}.`
+                response.callback = () => put({type: "UPDATE_LOCATION",
+                payload: gameState.rooms.filter((room) => {
+                    if (room.room_name == split[1]) {
+                        return room
+                    }
+                })[0]})
                 return response;
+                break;
             } else {
                 response.result = `You don't know how to get there.`
                 return response;
@@ -91,6 +98,18 @@ function* parseCommand(message) {
         case 'look':
             response.type = "LOOK";
             if (!split[1]) {
+                let interactablesToString = 'There\'s nothing to see here.'
+                let interactables = room.room_interactables.interactables;
+                if (interactables.length > 0) {
+                    interactablesToString = `You see the following points of interest: ` + interactables.map((object) => {
+                        let key = Object.keys(object)[0];
+                        return key;
+                    }).join(', ');
+                }
+                response.result = interactablesToString;
+                return response;
+            }
+            if (split[1] == 'room') {
                 response.result = room.room_description;
                 return response;
             }

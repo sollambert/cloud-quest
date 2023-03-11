@@ -1,7 +1,8 @@
 import { takeLatest, put, select } from "redux-saga/effects"
 
 function* updateLocation(action) {
-    yield put ({type: 'SET_CURRENT_ROOM', payload: action.payload})
+    yield put ({type: 'SET_CURRENT_ROOM', payload: action.payload.room_name});
+    yield put ({type: 'ADD_HISTORY', payload: action.payload.room_description});
 }
 
 function* gameStateSaga() {

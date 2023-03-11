@@ -19,7 +19,7 @@ function ChatHistory() {
     return (
         <div className="history">
             {messages.map((message, i) => {
-                return <p key={i} >{message.message}</p>
+                return <p key={i} >{message}</p>
             })}
             <div ref={historyEndRef} />
         </div>

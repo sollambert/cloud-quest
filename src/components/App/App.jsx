@@ -19,6 +19,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import Home from '../Pages/Home/Home';
 import Help from '../Pages/Help/Help';
+import Saves from '../Pages/Saves/Saves';
 
 import './App.css';
 
@@ -62,7 +63,13 @@ function App() {
           </ProtectedRoute>
 
           <ProtectedRoute
-            // logged in shows InfoPage else shows LoginPage
+            exact
+            path="/saves"
+          >
+            <Saves />
+          </ProtectedRoute>
+
+          <ProtectedRoute
             exact
             path="/help"
           >

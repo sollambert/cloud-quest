@@ -49,8 +49,9 @@ function* logoutUser(action) {
     // it will end the session
     yield axios.post('/api/user/logout', config);
 
-    //clear chat history on logout
+    //clear chat history and loaded save data on logout
     yield put({type: 'CLEAR_HISTORY'});
+    yield put({type: 'CLEAR_SAVE_DATA'});
 
     // now that the session has ended on the server
     // remove the client-side user object to let

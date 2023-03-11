@@ -39,6 +39,7 @@ Button
 
 .btn {
   display: inline-block;
+  font: inherit;
   padding: 10px 20px;
   border-color: #12ff1e;
   border-width: 1px 1px 3px;

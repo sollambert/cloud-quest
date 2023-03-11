@@ -28,6 +28,11 @@ function Nav() {
               Home
             </Link>
 
+            {/* link to saves page */}
+            <Link className="navLink" to="/saves">
+              Saves
+            </Link>
+
             {/* link to help page */}
             <Link className="navLink" to="/help">
               Help
@@ -39,8 +44,8 @@ function Nav() {
         <Link className="navLink" to="/about">
           About
         </Link>
-        {user.id && 
-            <LogOutButton className="logOutButton" />
+        {user.id &&
+          <LogOutButton className="logOutButton" />
         }
       </div>
     </div>

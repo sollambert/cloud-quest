@@ -32,12 +32,11 @@ function* parseCommand(message) {
             response.type = "GO";
             if (split[2]) {
                 split[1] = `${split[1]} ${split[2]}`;
-                console.log(split[1]);
             }
             if (!split[1]) {
                 response.result = `Go where?`
                 return response;
-            } if (room.name == split[1]) {
+            } if (room.room_name == split[1]) {
                 response.result = `You are already there.`
                 return response;
             } if (room.room_exits.exits.includes(split[1])) {
@@ -98,7 +97,7 @@ function* parseCommand(message) {
         case 'look':
             response.type = "LOOK";
             if (!split[1]) {
-                let interactablesToString = 'There\'s nothing to see here.'
+                let interactablesToString = 'You don\'t see anything particularly interesting.'
                 let interactables = room.room_interactables.interactables;
                 if (interactables.length > 0) {
                     interactablesToString = `You see the following points of interest: ` + interactables.map((object) => {

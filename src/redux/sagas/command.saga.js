@@ -2,24 +2,30 @@ import { select, put, takeLatest } from 'redux-saga/effects';
 import ignored from '../../modules/ignored';
 
 const gameStateSelector = (state) => state.gameState;
-const gameState = select(gameStateSelector);
+let gameState;
 
 function* useCommand(action) {
+    gameState = yield select(gameStateSelector);
+    console.log(gameState);
     const response = yield parseCommand(action.payload);
     console.log(response);
     yield put({type: 'ADD_HISTORY', payload: { message: action.payload }})
     yield put({type: 'ADD_HISTORY', payload: { message: response.result }})
 }
 
-function parseCommand(message) {
-    // const gameState = useSelector(store => store.gameState);
+function* parseCommand(message) {
+    const room = gameState.rooms.filter((room) => {
+        if (room.room_name == gameState.location) {
+            return room
+        }
+    })[0];
+    console.log(room);
     message = message.toLowerCase();
     let split = message.split(' ').filter(
         (element) => {
             if (!ignored.includes(element)) { return element }
         });
     let response = {};
-    //console.log(split)
     switch (split[0]) {
         case 'go':
             response.type = "GO";
@@ -30,13 +36,11 @@ function parseCommand(message) {
             if (!split[1]) {
                 response.result = `Go where?`
                 return response;
-            } if (gameState.room.name == split[1]) {
+            } if (room.name == split[1]) {
                 response.result = `You are already there.`
                 return response;
-            } if (gameState.room.exits.includes(split[1])) {
-                // pool.query(`UPDATE player_data
-                // SET room = $2
-                // WHERE id=$1`, [1, split[1]])
+            } if (room.room_exits.exits.includes(split[1])) {
+                yield put({type: "UPDATE_LOCATION", payload: split[1]})
                 response.result = `You go to the ${split[1]}.`
                 return response;
             } else {
@@ -66,7 +70,7 @@ function parseCommand(message) {
             }
         case 'exits':
             response.type = "EXITS";
-            response.result = gameState.room.exits.join(', ')
+            response.result = room.room_exits.exits.join(', ')
             return response;
         case 'take':
             response.type = "TAKE";
@@ -74,7 +78,7 @@ function parseCommand(message) {
                 response.result = `Take what?`
                 return response;
             }
-            for (let item of gameState.room.items) {
+            for (let item of room.items) {
                 //console.log(item)
                 if (item == (split[1])) {
                     response.result = `You take the ${split[1]}`;
@@ -86,23 +90,21 @@ function parseCommand(message) {
             return response;
         case 'look':
             response.type = "LOOK";
-            //console.log(gameState.room.interactables)
             if (!split[1]) {
-                response.result = gameState.room.description;
+                response.result = room.room_description;
                 return response;
             }
             if (split[1] == 'items') {
-                if (gameState.room.items[0] == undefined) {
+                if (room.room_items[0] == undefined) {
                     response.result = "You don't see anything particularly interesting to pick up."
                     return response;
                 }
-                response.result = gameState.room.items.join(', ');
+                response.result = room.room_items.join(', ');
                 return response;
             }
-            for (let object of gameState.room.interactables) {
-                console.log(object)
-                if (object[(split[1])]) {
-                    response.result = object[(split[1])].description;
+            for (let interactable of room.room_interactables.interactables) {
+                if (interactable[split[1]]){
+                    response.result = interactable[split[1]].description;
                     return response;
                 }
             }

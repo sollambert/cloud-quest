@@ -1,0 +1,19 @@
+.nav-bar {
+    border: 1px solid #12ff1e;
+    color : #12ff1e;
+    background-color: #030e00;
+    font-size: 1em;
+    font-family: 'Apple II';
+    width: stretch;
+    padding: .5em;
+
+    
+    display: flex;
+    flex-direction: row;
+    justify-self: flex-end;
+    justify-content: space-evenly;
+}
+
+.link {
+    color : #12ff1e;
+}

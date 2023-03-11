@@ -26,8 +26,6 @@ import './App.css';
 
 function App() {
 
-  const historyEndRef = useRef(null)
-
   const dispatch = useDispatch();
 
   const user = useSelector(store => store.user);
@@ -62,7 +60,7 @@ function App() {
             exact
             path="/home"
           >
-            <Home messages={history} historyEndRef={historyEndRef}/>
+            <Home />
           </ProtectedRoute>
 
           <ProtectedRoute

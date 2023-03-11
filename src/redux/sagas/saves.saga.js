@@ -28,10 +28,12 @@ function* deleteSave(action) {
     yield axios.delete(`/saves/${action.payload}`);
 }
 
-function* rootSaga() {
+function* savesSaga() {
     yield takeLatest("INIT_GAME_STATE", initializeGameState);
     yield takeLatest("LOAD_GAME", loadGame);
     yield takeLatest("SAVE_GAME", saveGame);
     yield takeLatest("OVERWRITE_SAVE", overwriteSave);
     yield takeLatest("DELETE_SAVE", deleteSave);
 }
+
+export default savesSaga;

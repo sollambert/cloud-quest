@@ -1,14 +1,14 @@
 import { select, put, takeLatest } from 'redux-saga/effects';
-import ignored from '../modules/ignored';
+import ignored from '../../modules/ignored';
 
 const gameStateSelector = (state) => state.gameState;
 const gameState = select(gameStateSelector);
 
 function* useCommand(action) {
-    const response = yield parseCommand(message);
+    const response = yield parseCommand(action.payload);
     console.log(response);
     yield put({type: 'ADD_HISTORY', payload: { message: action.payload }})
-    yield put({type: 'ADD_HISTORY', payload: { message: response }})
+    yield put({type: 'ADD_HISTORY', payload: { message: response.result }})
 }
 
 function parseCommand(message) {
@@ -34,9 +34,9 @@ function parseCommand(message) {
                 response.result = `You are already there.`
                 return response;
             } if (gameState.room.exits.includes(split[1])) {
-                pool.queimport { useSelector } from 'react-redux';ry(`UPDATE player_data
-                SET room = $2
-                WHERE id=$1`, [1, split[1]])
+                // pool.query(`UPDATE player_data
+                // SET room = $2
+                // WHERE id=$1`, [1, split[1]])
                 response.result = `You go to the ${split[1]}.`
                 return response;
             } else {
@@ -114,8 +114,8 @@ function parseCommand(message) {
     return response;
 }
 
-function* rootSaga() {
+function* commandSaga() {
     yield takeLatest("PARSE_COMMAND", useCommand);
 }
 
-export default useCommand;
+export default commandSaga;

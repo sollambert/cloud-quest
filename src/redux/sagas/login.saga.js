@@ -20,6 +20,8 @@ function* loginUser(action) {
     // after the user has logged in
     // get the user information from the server
     yield put({ type: 'FETCH_USER' });
+
+
   } catch (error) {
     console.log('Error with user login:', error);
     if (error.response.status === 401) {
@@ -49,8 +51,9 @@ function* logoutUser(action) {
     // it will end the session
     yield axios.post('/api/user/logout', config);
 
-    //clear chat history and loaded save data on logout
+    //clear chat history and loaded game data on logout
     yield put({type: 'CLEAR_HISTORY'});
+    yield put({type: 'CLEAR_GAME_STATE'});
     yield put({type: 'CLEAR_SAVE_DATA'});
 
     // now that the session has ended on the server

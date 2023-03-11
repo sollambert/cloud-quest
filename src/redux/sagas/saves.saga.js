@@ -5,27 +5,29 @@ import axios from 'axios';
 const gameStateSelector = (state) => state.gameState;
 
 function* initializeGameState() {
-    let response = yield axios.get('/saves/new');
-    put({type: "SET_GAME_STATE", payload: response});
+    let response = yield axios.get('/api/saves/new');
+    // console.log(response.data);
+    yield put({type: "SET_GAME_STATE", payload: response.data});
+    yield put({type: 'ADD_HISTORY', payload: {message: response.data.rooms[0].room_description}})
 }
 
 function* loadGame(action) {
-    let response = yield axios.get(`/saves/${action.payload}`)
+    let response = yield axios.get(`/api//saves/${action.payload}`)
     put({type: "SET_GAME_STATE", payload: response})
 }
 
 function* saveGame() {
     const gameState = yield select(gameStateSelector);
-    yield axios.post(`/saves`, gameState);
+    yield axios.post(`/api//saves`, gameState);
 }
 
 function* overwriteSave(action) {
     const gameState = yield select(gameStateSelector);
-    yield axios.update(`/saves/${action.payload}`, gameState);
+    yield axios.update(`/api//saves/${action.payload}`, gameState);
 }
 
 function* deleteSave(action) {
-    yield axios.delete(`/saves/${action.payload}`);
+    yield axios.delete(`/api//saves/${action.payload}`);
 }
 
 function* savesSaga() {

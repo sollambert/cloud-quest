@@ -2,14 +2,13 @@ import './Home.css';
 import Room from './HomeComponents/Room/Room';
 import ChatHistory from './HomeComponents/ChatHistory/ChatHistory';
 import ChatInput from './HomeComponents/ChatInput/ChatInput';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 function Home() {
 
-    const getRoom = () => {
-    }
-
-    const sendCommand = (message, cb) => {
-    }
+    const dispatch = useDispatch();
+    const gameState = useSelector(store => store.gameState);
 
     return (
         <>

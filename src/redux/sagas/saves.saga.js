@@ -12,7 +12,7 @@ function* initializeGameState() {
 }
 
 function* loadGame(action) {
-    let response = yield axios.get(`/api//saves/${action.payload}`)
+    let response = yield axios.get(`/api/saves/${action.payload}`)
     put({type: "SET_GAME_STATE", payload: response})
 }
 

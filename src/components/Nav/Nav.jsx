@@ -28,6 +28,11 @@ function Nav() {
               Home
             </Link>
 
+            {/* link to help page */}
+            <Link className="navLink" to="/inventory">
+              Inventory
+            </Link>
+
             {/* link to saves page */}
             <Link className="navLink" to="/saves">
               Saves

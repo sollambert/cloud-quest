@@ -20,6 +20,7 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import Home from '../Pages/Home/Home';
 import Help from '../Pages/Help/Help';
 import Saves from '../Pages/Saves/Saves';
+import Inventory from '../Pages/Inventory/Inventory';
 
 import './App.css';
 
@@ -60,6 +61,12 @@ function App() {
             path="/home"
           >
             <Home />
+          </ProtectedRoute>
+          <ProtectedRoute
+            exact
+            path="/inventory"
+          >
+            <Inventory />
           </ProtectedRoute>
 
           <ProtectedRoute

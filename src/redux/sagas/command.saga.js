@@ -6,12 +6,12 @@ let gameState;
 
 function* useCommand(action) {
     gameState = yield select(gameStateSelector);
-    console.log(gameState);
+    // console.log(gameState);
     const response = yield parseCommand(action.payload);
-    console.log(response);
-    yield put({type: 'ADD_HISTORY', payload: action.payload })
-    yield put({type: 'ADD_HISTORY', payload:response.result })
-    if (response.callback) {yield response.callback()}
+    // console.log(response);
+    yield put({ type: 'ADD_HISTORY', payload: action.payload })
+    yield put({ type: 'ADD_HISTORY', payload: response.result })
+    if (response.callback) { yield response.callback() }
 }
 
 function* parseCommand(message) {
@@ -20,7 +20,7 @@ function* parseCommand(message) {
             return room
         }
     })[0];
-    console.log(room);
+    // console.log(room);
     message = message.toLowerCase();
     let split = message.split(' ').filter(
         (element) => {
@@ -41,12 +41,14 @@ function* parseCommand(message) {
                 return response;
             } if (room.room_exits.exits.includes(split[1])) {
                 response.result = `You go to the ${split[1]}.`
-                response.callback = () => put({type: "UPDATE_LOCATION",
-                payload: gameState.rooms.filter((room) => {
-                    if (room.room_name == split[1]) {
-                        return room
-                    }
-                })[0]})
+                response.callback = () => put({
+                    type: "UPDATE_LOCATION",
+                    payload: gameState.rooms.filter((room) => {
+                        if (room.room_name == split[1]) {
+                            return room
+                        }
+                    })[0]
+                })
                 return response;
                 break;
             } else {
@@ -68,7 +70,28 @@ function* parseCommand(message) {
                 return response;
             }
             if (split[2]) {
-                response.result = `You use the ${split[1]} on the ${split.slice(2, split.length).join(' ')}.`
+                if (split[3]) {
+                    split[2] = `${split[2]} ${split[3]}`;
+                }
+                response.result = `You don't have a ${split[1]}.`;
+                for (let item of gameState.inventory) {
+                    // console.log(item);
+                    // console.log(item.item_name)
+                    let interactables = room.room_interactables.interactables;
+                    if (item.item_name == split[1]) {
+                        response.result = `You don't know how to use the ${split[1]} on the ${split[2]}.`
+                        if (item.item_interactions.includes(split[2])) {
+                            response.result = `There isn't a ${split[2]} here.`
+                            for (let interactable of interactables) {
+                                if (interactable.name == split[2]) {
+                                    // console.log(interactables);
+                                    response = useItem(split[1], response);
+                                    response.result = `You use the ${split[1]} on the ${split[2]}.`
+                                }
+                            }
+                        }
+                    }
+                }
                 return response;
             } else {
                 response.result = `Use the ${split[1]} on what?`
@@ -86,9 +109,9 @@ function* parseCommand(message) {
             }
             for (let item of room.items) {
                 //console.log(item)
-                if (item == (split[1])) {
+                if (item.item_name == (split[1])) {
                     response.result = `You take the ${split[1]}`;
-                    response.item = item;
+                    response = takeItem(item)
                     return response;
                 }
             }
@@ -96,13 +119,16 @@ function* parseCommand(message) {
             return response;
         case 'look':
             response.type = "LOOK";
+            if (split[2]) {
+                split[1] = `${split[1]} ${split[2]}`;
+            }
             if (!split[1]) {
                 let interactablesToString = 'You don\'t see anything particularly interesting.'
                 let interactables = room.room_interactables.interactables;
                 if (interactables.length > 0) {
                     interactablesToString = `You see the following points of interest: ` + interactables.map((object) => {
-                        let key = Object.keys(object)[0];
-                        return key;
+                        console.log(object)
+                        return object.name;
                     }).join(', ');
                 }
                 response.result = interactablesToString;
@@ -121,8 +147,8 @@ function* parseCommand(message) {
                 return response;
             }
             for (let interactable of room.room_interactables.interactables) {
-                if (interactable[split[1]]){
-                    response.result = interactable[split[1]].description;
+                if (interactable.name == split[1]) {
+                    response.result = interactable.description;
                     return response;
                 }
             }
@@ -131,6 +157,31 @@ function* parseCommand(message) {
         default:
             response.result = 'Sorry, I don\'t understand what you\'re trying to do.'
     }
+    return response;
+}
+
+function useItem(item, response) {
+    switch (item) {
+        case "key":
+            gameState.house_locked = false;
+            for (let room of gameState.rooms) {
+                if (room.room_name == "front door") {
+                    console.log(room);
+                    room.room_exits.exits.push("living room");
+                }
+            }
+            break;
+    }
+    gameState.inventory = gameState.inventory.filter((invItem) => {
+        if ( invItem.item_name != item) {return invItem};
+    })
+    response.callback = () => {
+        put({type: 'SET_GAME_STATE', payload: gameState})
+    };
+    return response;
+}
+
+function takeItem(item, response) {
     return response;
 }
 

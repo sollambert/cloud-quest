@@ -6,7 +6,6 @@ import {
   Switch,
 } from 'react-router-dom';
 
-import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Nav from '../Nav/Nav';
@@ -14,9 +13,9 @@ import Footer from '../Footer/Footer';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
-import AboutPage from '../AboutPage/AboutPage';
-import LoginPage from '../LoginPage/LoginPage';
-import RegisterPage from '../RegisterPage/RegisterPage';
+import AboutPage from '../Pages/AboutPage/AboutPage';
+import LoginPage from '../Pages/LoginPage/LoginPage';
+import RegisterPage from '../Pages/RegisterPage/RegisterPage';
 import Home from '../Pages/Home/Home';
 import Help from '../Pages/Help/Help';
 import Saves from '../Pages/Saves/Saves';

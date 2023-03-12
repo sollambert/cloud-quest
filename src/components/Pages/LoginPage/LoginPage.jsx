@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginForm from '../LoginForm/LoginForm';
+import LoginForm from './LoginComponents/LoginForm/LoginForm';
 import { useHistory } from 'react-router-dom';
 
 function LoginPage() {

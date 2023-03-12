@@ -80,7 +80,7 @@ function* parseCommand(message) {
                     let interactables = room.room_interactables.interactables;
                     if (item.item_name == split[1]) {
                         response.result = `You don't know how to use the ${split[1]} on the ${split[2]}.`
-                        if (item.item_interactions.includes(split[2])) {
+                        if (item.item_interactions.interactions.includes(split[2])) {
                             response.result = `There isn't a ${split[2]} here.`
                             for (let interactable of interactables) {
                                 if (interactable.name == split[2]) {
@@ -110,8 +110,8 @@ function* parseCommand(message) {
             for (let item of room.items) {
                 //console.log(item)
                 if (item.item_name == (split[1])) {
+                    response = takeItem(item, room, response);
                     response.result = `You take the ${split[1]}`;
-                    response = takeItem(item)
                     return response;
                 }
             }
@@ -139,11 +139,14 @@ function* parseCommand(message) {
                 return response;
             }
             if (split[1] == 'items') {
-                if (room.room_items[0] == undefined) {
+                if (room.items.length == 0) {
                     response.result = "You don't see anything particularly interesting to pick up."
                     return response;
+                } else {
+                    response.result = `You see the following in the room: ` + room.items.map((item) => {
+                        return item.item_name;
+                    }).join(', ');
                 }
-                response.result = room.room_items.join(', ');
                 return response;
             }
             for (let interactable of room.room_interactables.interactables) {
@@ -167,21 +170,42 @@ function useItem(item, response) {
             for (let room of gameState.rooms) {
                 if (room.room_name == "front door") {
                     console.log(room);
+                    room.room_interactables.interactables = room.room_interactables.interactables.map((interactable) => {
+                        if (interactable.name == "front door") {
+                            return { ...interactable, description: "The front door to your old house. It's been unlocked." }
+                        } else {
+                            return interactable;
+                        }
+                    })
                     room.room_exits.exits.push("living room");
                 }
             }
             break;
     }
     gameState.inventory = gameState.inventory.filter((invItem) => {
-        if ( invItem.item_name != item) {return invItem};
+        if (invItem.item_name != item) { return invItem };
     })
     response.callback = () => {
-        put({type: 'SET_GAME_STATE', payload: gameState})
+        put({ type: 'SET_GAME_STATE', payload: gameState })
     };
     return response;
 }
 
-function takeItem(item, response) {
+function takeItem(item, room, response) {
+    for (let index in gameState.rooms) {
+        if (gameState.rooms[index].room_name == room.room_name) {
+            room.items = room.items.filter((roomItem) => {
+                if (roomItem != item) {
+                    return roomItem;
+                }
+            });
+            gameState.rooms[index] = room;
+        }
+    }
+    gameState.inventory.push(item);
+    response.callback = () => {
+        put({ type: 'SET_GAME_STATE', payload: gameState })
+    };
     return response;
 }
 

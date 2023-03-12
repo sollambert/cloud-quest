@@ -38,7 +38,12 @@ router.get('/new', rejectUnauthenticated, (req, res) => {
         electricity: false,
         house_locked: true,
         location: "car",
-        inventory: [],
+        inventory: [
+          {
+            item_name: "key",
+            item_description: "Maybe this will get me in the front door.",
+            item_interactions: "front door"
+          }],
         rooms: dbRes.rows
       };
       res.send(newGameState);

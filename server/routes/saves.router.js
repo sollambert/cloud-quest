@@ -34,19 +34,39 @@ router.get('/new', rejectUnauthenticated, (req, res) => {
     `
   pool.query(roomQuery)
     .then((dbRes) => {
-      const newGameState = {
-        electricity: false,
-        house_locked: true,
-        location: "car",
-        inventory: [
-          {
-            item_name: "key",
-            item_description: "Maybe this will get me in the front door.",
-            item_interactions: "front door"
-          }],
-        rooms: dbRes.rows
-      };
-      res.send(newGameState);
+      for (let index in dbRes.rows) {
+        dbRes.rows[index].items = [];
+      }
+      const itemQuery = `
+      SELECT i.item_name, i.item_description, i.item_interactions, ri.room_id FROM items i
+      JOIN rooms_items ri ON i.id = ri.item_id
+      JOIN rooms r ON r.id = ri.room_id;`
+
+      pool.query(itemQuery)
+      .then((itemRes) => {
+        for (item of itemRes.rows) {
+            dbRes.rows[item.room_id - 1].items = [...dbRes.rows[item.room_id - 1].items, item];
+            // console.log(dbRes.rows[item.room_id - 1]);
+        }
+        const newGameState = {
+          electricity: false,
+          house_locked: true,
+          location: "car",
+          inventory: [
+            // {
+            //   item_name: "key",
+            //   item_description: "Maybe this will get me in the front door.",
+            //   item_interactions: "front door"
+            // }
+          ],
+          rooms: dbRes.rows
+        };
+        res.send(newGameState);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      })
     })
     .catch((err) => {
       console.error(err);

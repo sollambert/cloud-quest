@@ -38,7 +38,7 @@ router.get('/new', rejectUnauthenticated, (req, res) => {
         dbRes.rows[index].items = [];
       }
       const itemQuery = `
-      SELECT i.item_name, i.item_description, i.item_interactions, ri.room_id FROM items i
+      SELECT i.item_name, i.item_description, ri.room_id FROM items i
       JOIN rooms_items ri ON i.id = ri.item_id
       JOIN rooms r ON r.id = ri.room_id;
       `

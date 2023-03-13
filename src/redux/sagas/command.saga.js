@@ -11,6 +11,7 @@ function* useCommand(action) {
     // console.log(response);
     yield put({ type: 'ADD_HISTORY', payload: action.payload })
     yield put({ type: 'ADD_HISTORY', payload: response.result })
+    yield put({ type: 'ADD_HISTORY', payload: response.message })
     if (response.callback) { yield response.callback() }
 }
 
@@ -50,7 +51,6 @@ function* parseCommand(message) {
                     })[0]
                 })
                 return response;
-                break;
             } else {
                 response.result = `You don't know how to get there.`
                 return response;
@@ -61,7 +61,17 @@ function* parseCommand(message) {
                 response.result = `Open what?`
                 return response;
             }
-            response.result = `You open the ${split[1]}`
+            if (split[2]) {
+                split[1] = `${split[1]} ${split[2]}`;
+            }
+            let interactables = room.room_interactables.interactables;
+            response.result = `You can't open the ${split[1]} any further.`
+            for (let interactIndex in interactables) {
+                if (interactables[interactIndex].open && interactables[interactIndex].name.includes(split[1])) {
+                    response.result = `You open the ${split[1]}.`
+                    response = handleOpen(interactIndex, room, response);
+                }
+            }
             return response;
         case 'use':
             response.type = "USE";
@@ -139,6 +149,7 @@ function* parseCommand(message) {
                 return response;
             }
             if (split[1] == 'room') {
+                // console.log(room.room_description)
                 response.result = room.room_description;
                 return response;
             }
@@ -182,6 +193,7 @@ function useItem(item, room, response) {
         if (interactable?.use?.[item.item_name]) {
             console.log(interactable.use[item.item_name]);
             const interactionItem = interactable.use[item.item_name];
+            response.message = interactionItem.message;
             const effects = Object.keys(interactionItem.effect);
             console.log(effects);
             for (let effect of effects) {
@@ -201,40 +213,6 @@ function useItem(item, room, response) {
         }
     }
 
-    // switch (item) {
-    //     case "key":
-    //         gameState.house_locked = false;
-    //         for (let room of gameState.rooms) {
-
-    //             if (room.room_name == "front door") {
-    //                 console.log(room);
-    //                 room.room_interactables.interactables = room.room_interactables.interactables.map((interactable) => {
-    //                     if (interactable.name == "front door") {
-    //                         return { ...interactable, description: "The front door to your old house. It's been unlocked." }
-    //                     } else {
-    //                         return interactable;
-    //                     }
-    //                 })
-    //                 room.room_exits.exits.push("living room");
-    //             }
-    //         }
-    //         break;
-    //     case "fuse":
-    //         gameState.electricity = true;
-    //         for (let room of gameState.rooms) {
-    //             if (room.room_name == "shed") {
-    //                 console.log(room);
-    //                 room.room_interactables.interactables = room.room_interactables.interactables.map((interactable) => {
-    //                     if (interactable.name == "generator") {
-    //                         return { ...interactable, description: "With the new fuse, the generator is humming with life after a quick pull of the rip cord." }
-    //                     } else {
-    //                         return interactable;
-    //                     }
-    //                 })
-    //             }
-    //         }
-    //         break;
-    // }
     gameState.inventory = gameState.inventory.filter((invItem) => {
         if (invItem.item_name != item.item_name) {
             // console.log(invItem.item_name, item.name);
@@ -243,6 +221,26 @@ function useItem(item, room, response) {
     })
     response.callback = () => {
         // console.log(JSON.stringify(gameState));
+        put({ type: 'SET_GAME_STATE', payload: gameState })
+    };
+    return response;
+}
+
+function handleOpen(interactIndex, room, response) {
+    let interactable = room.room_interactables.interactables[interactIndex]
+    for (let roomIndex in gameState.rooms) {
+        if (gameState.rooms[roomIndex].room_name == room.room_name) {
+            if (interactable.open?.shows_item) {
+                gameState.rooms[roomIndex].items = [...interactable.open?.shows_item.items, ...room.items]
+                response.message = interactable.open.shows_item.message;
+                if (interactable.open.shows_item.new_description) {
+                    gameState.rooms[roomIndex].room_interactables.interactables[interactIndex].description = interactable.open.shows_item.new_description;
+                }
+            }
+            delete gameState.rooms[roomIndex].room_interactables.interactables[interactIndex].open;
+        }
+    }
+    response.callback = () => {
         put({ type: 'SET_GAME_STATE', payload: gameState })
     };
     return response;

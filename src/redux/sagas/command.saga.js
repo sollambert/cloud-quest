@@ -181,6 +181,21 @@ function useItem(item, response) {
                 }
             }
             break;
+        case "fuse":
+            gameState.electricity = true;
+            for (let room of gameState.rooms) {
+                if (room.room_name == "shed") {
+                    console.log(room);
+                    room.room_interactables.interactables = room.room_interactables.interactables.map((interactable) => {
+                        if (interactable.name == "generator") {
+                            return { ...interactable, description: "With the new fuse, the generator is humming with life after a quick pull of the rip cord." }
+                        } else {
+                            return interactable;
+                        }
+                    })
+                }
+            }
+            break;
     }
     gameState.inventory = gameState.inventory.filter((invItem) => {
         if (invItem.item_name != item) { return invItem };

@@ -17,7 +17,7 @@ function Help() {
                 <tbody>
                     <tr>
                         <td>
-                            GO
+                            GO {"{exit name}"}
                         </td>
                         <td>
                             Used to navigate through the exits of various rooms.
@@ -25,7 +25,7 @@ function Help() {
                     </tr>
                     <tr>
                         <td>
-                            USE
+                            USE {"{item name} {object name}"}
                         </td>
                         <td>
                             Allows you to use items on various interactables or other items.
@@ -33,7 +33,7 @@ function Help() {
                     </tr>
                     <tr>
                         <td>
-                            OPEN
+                            OPEN {"{object name}"}
                         </td>
                         <td>
                             Opens various interactables found throughout the game. Could also potentially be used on items.
@@ -41,15 +41,23 @@ function Help() {
                     </tr>
                     <tr>
                         <td>
-                            LOOK
+                            LOOK {"{object name | 'items' | 'room'}"}
                         </td>
                         <td>
-                            Take a closer look at any interactables in the area or get a refresher on the room you're in.
+                            Take a closer look at any interactables/items in the area or get a refresher on the room you're in.
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            TAKE
+                            MOVE {"{object name}"}
+                        </td>
+                        <td>
+                            Move an object to potentially reveal whatever it's hiding.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            TAKE {"{item name}"}
                         </td>
                         <td>
                             This command allows you to pick up objects you've found on your journey.

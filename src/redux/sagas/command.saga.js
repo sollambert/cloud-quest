@@ -171,14 +171,24 @@ function* parseCommand(message) {
                 split[1] = `${split[1]} ${split[2]}`;
             }
             if (!split[1]) {
-                let interactablesToString = 'You don\'t see anything particularly interesting.'
+                let defaultString = 'You don\'t see anything particularly interesting.'
+                let returnString = '';
                 if (interactables.length > 0) {
-                    interactablesToString = `You see the following points of interest: ` + interactables.map((object) => {
+                    returnString = returnString + `You see the following points of interest: ` + interactables.map((object) => {
                         console.log(object)
                         return object.display_name;
-                    }).join(', ');
+                    }).join(', ') + ".";
                 }
-                response.result = interactablesToString;
+                if (room.items.length > 0) {
+                    returnString = returnString + 'You see the following items: ' + room.items.map((item) => {
+                        return item.item_name;
+                    }).join(', ') + ".";
+                }
+                if (returnString != '') {
+                    response.result = returnString;
+                } else {
+                    response.result = defaultString;
+                }
                 return response;
             }
             if (split[1] == 'room') {

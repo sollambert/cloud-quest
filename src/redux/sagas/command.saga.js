@@ -28,6 +28,7 @@ function* parseCommand(message) {
             if (!ignored.includes(element)) { return element }
         });
     let response = {};
+    let interactables = room.room_interactables.interactables;
     switch (split[0]) {
         case 'go':
             response.type = "GO";
@@ -64,7 +65,6 @@ function* parseCommand(message) {
             if (split[2]) {
                 split[1] = `${split[1]} ${split[2]}`;
             }
-            let interactables = room.room_interactables.interactables;
             response.result = `You can't open the ${split[1]} any further.`
             for (let interactIndex in interactables) {
                 if (interactables[interactIndex].open && interactables[interactIndex].name.includes(split[1])) {
@@ -87,7 +87,6 @@ function* parseCommand(message) {
                 for (let item of gameState.inventory) {
                     // console.log(item);
                     // console.log(item.item_name)
-                    let interactables = room.room_interactables.interactables;
                     if (item.item_name == split[1]) {
                         response.result = `There isn't a ${split[2]} here.`
                         for (let interactable of interactables) {
@@ -108,9 +107,44 @@ function* parseCommand(message) {
                 }
                 return response;
             } else {
+                let interactables = room.room_interactables.interactables;
+                for (let index in interactables) {
+                    // console.log(interactables[index])
+                    if (interactables[index].name.includes(split[1])) {
+                        if (interactables[index]?.use?.self) {
+                            // console.log(interactables[index]?.use?.self)
+                            response.result = `You move the ${split[1]}...`;
+                            response = useSelf(index, room, response)
+                            return response;
+                        }
+                    }
+                }
                 response.result = `Use the ${split[1]} on what?`
                 return response;
             }
+        case 'move':
+            response.type = "MOVE";
+            if (!split[1]) {
+                response.result = `Move what?`
+                return response;
+            }
+            if (split[2]) {
+                split[1] = `${split[1]} ${split[2]}`;
+            }
+            for (let index in interactables) {
+                console.log(interactables[index])
+                if (interactables[index].name.includes(split[1])) {
+                    response.result = `You don't know how you can move the ${split[1]}`;
+                    if (interactables[index]?.move) {
+                        console.log(interactables[index]?.move)
+                        response.result = `You move the ${split[1]}...`;
+                        response = handleMove(index, room, response)
+                        return response;
+                    }
+                }
+            }
+            response.result = `You don't see a ${split[1]} here.`
+            return response;
         case 'exits':
             response.type = "EXITS";
             response.result = room.room_exits.exits.join(', ')
@@ -138,7 +172,6 @@ function* parseCommand(message) {
             }
             if (!split[1]) {
                 let interactablesToString = 'You don\'t see anything particularly interesting.'
-                let interactables = room.room_interactables.interactables;
                 if (interactables.length > 0) {
                     interactablesToString = `You see the following points of interest: ` + interactables.map((object) => {
                         console.log(object)
@@ -164,7 +197,7 @@ function* parseCommand(message) {
                 }
                 return response;
             }
-            for (let interactable of room.room_interactables.interactables) {
+            for (let interactable of interactables) {
                 if (interactable.name.includes(split[1])) {
                     response.result = interactable.description;
                     return response;
@@ -178,8 +211,35 @@ function* parseCommand(message) {
     return response;
 }
 
+function handleMove(interactIndex, room, response) {
+    let interactable = room.room_interactables.interactables[interactIndex]
+    for (let roomIndex in gameState.rooms) {
+        if (gameState.rooms[roomIndex].room_name == room.room_name) {
+            if (interactable.move?.add_interaction) {
+                for (let interaction of Object.keys(interactable.move.add_interaction)) {
+                    console.log('interact index', index, 'interaction', interaction);
+                    gameState.rooms[roomIndex].room_interactables.interactables[index][interaction] = interactable.move.add_interaction[interaction];
+                }
+                if (interactable.move.new_description) {
+                    gameState.rooms[roomIndex].room_interactables.interactables[index].description = interactable.move.new_description;
+                }
+                response.message = interactable.move.message;
+            }
+            if (interactable.move?.shows_item) {
+                gameState.rooms[roomIndex].items = [...interactable.move.shows_item.items, ...room.items]
+                response.message = interactable.move.shows_item.message;
+                if (interactable.move.shows_item.new_description) {
+                    gameState.rooms[roomIndex].room_interactables.interactables[interactIndex].description = interactable.move.shows_item.new_description;
+                }
+            }
+        }
+    }
+    return response;
+}
+
 function useItem(item, room, response) {
     let roomIndex;
+    let removeItem = true;
     for (roomIndex in gameState.rooms) {
         if (gameState.rooms[roomIndex].room_name == room.room_name) {
             // console.log(gameState.rooms[roomIndex].room_name);
@@ -189,15 +249,32 @@ function useItem(item, room, response) {
     // console.log(room);
     for (let index in room.room_interactables.interactables) {
         let interactable = room.room_interactables.interactables[index];
-        console.log('INT:', interactable, 'USE:', interactable.use, 'ITEM:', item.item_name);
+        // console.log('INT:', interactable, 'USE:', interactable.use, 'ITEM:', item.item_name);
         if (interactable?.use?.[item.item_name]) {
-            console.log(interactable.use[item.item_name]);
             const interactionItem = interactable.use[item.item_name];
+            if (interactionItem.condition) {
+                console.log('item conditions', interactionItem.condition);
+                let conditionsMet = true;
+                for (let condition of interactionItem.condition) {
+                    console.log("condition", condition);
+                    if (gameState[condition] == false) {
+                        console.log('condition state', gameState[condition]);
+                        response.message = interactionItem.condition_message;
+                        removeItem = false;
+                        conditionsMet = false;
+                        break;
+                    }
+                }
+                if (!conditionsMet) {
+                    break;
+                }
+            }
+            console.log(interactable.use[item.item_name]);
             response.message = interactionItem.message;
             const effects = Object.keys(interactionItem.effect);
-            console.log(effects);
+            // console.log(effects);
             for (let effect of effects) {
-                console.log("INT ITEM:", interactionItem, 'EFFECT:', effect);
+                // console.log("INT ITEM:", interactionItem, 'EFFECT:', effect);
                 if (effect == "new_description") {
                     // console.log('old desc:', gameState.rooms[roomIndex].room_interactables.interactables[index].description,
                     // "new desc:", interactionItem.effect.new_description);
@@ -213,12 +290,14 @@ function useItem(item, room, response) {
         }
     }
 
-    gameState.inventory = gameState.inventory.filter((invItem) => {
-        if (invItem.item_name != item.item_name) {
-            // console.log(invItem.item_name, item.name);
-            return invItem
-        };
-    })
+    if (removeItem) {
+        gameState.inventory = gameState.inventory.filter((invItem) => {
+            if (invItem.item_name != item.item_name) {
+                // console.log(invItem.item_name, item.name);
+                return invItem
+            };
+        })
+    }
     response.callback = () => {
         // console.log(JSON.stringify(gameState));
         put({ type: 'SET_GAME_STATE', payload: gameState })
@@ -236,6 +315,16 @@ function handleOpen(interactIndex, room, response) {
                 if (interactable.open.shows_item.new_description) {
                     gameState.rooms[roomIndex].room_interactables.interactables[interactIndex].description = interactable.open.shows_item.new_description;
                 }
+            }
+            if (interactable.open?.add_interaction) {
+                for (let interaction of Object.keys(interactable.open.add_interaction)) {
+                    console.log('interact index', interactIndex, 'interaction', interaction);
+                    gameState.rooms[roomIndex].room_interactables.interactables[interactIndex][interaction] = interactable.open.add_interaction[interaction];
+                }
+                if (interactable.open.new_description) {
+                    gameState.rooms[roomIndex].room_interactables.interactables[interactIndex].description = interactable.open.new_description;
+                }
+                response.message = interactable.open.message;
             }
             delete gameState.rooms[roomIndex].room_interactables.interactables[interactIndex].open;
         }

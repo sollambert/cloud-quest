@@ -10,8 +10,8 @@ function Room() {
     useEffect(() => {
         if (gameState && gameState.rooms) {
             for (let room of gameState.rooms) {
-                    if (room.room_name == gameState.location) {
-                        setRoomImage(room.room_image);
+                    if (room.name == gameState.location) {
+                        setRoomImage(room.image);
                     }
                 }
         }

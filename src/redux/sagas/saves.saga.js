@@ -4,22 +4,25 @@ import axios from 'axios';
 const gameStateSelector = (state) => state.gameState;
 
 function* initializeGameState() {
-    let response = yield axios.get('/api/saves/new');
+    let response = yield axios.get('/api/saves/new/1');
     yield put({ type: "SET_GAME_STATE", payload: response.data });
-    yield put({ type: 'ADD_HISTORY', payload: response.data.rooms[0].room_description })
+    yield put({ type: 'ADD_HISTORY', payload: response.data.rooms[0].description })
 }
 
 function* getSaveData() {
-    let response = yield axios.get('/api/saves/data');
+    const gameState = yield select(gameStateSelector);
+    let response = yield axios.get(`/api/saves/data/${gameState.game_id}`);
     yield put({ type: "SET_SAVE_DATA", payload: response.data });
 }
 
 function* loadGame(action) {
-    let response = yield axios.get(`/api/saves/load/${action.payload}`);
+    const gameState = yield select(gameStateSelector);
+    let response = yield axios.get(`/api/saves/load/${gameState.game_id}/${action.payload}`);
+    console.log(response.data)
     let roomDescription = '';
     for (let room of response.data.save.rooms) {
-        if (room.room_name == response.data.save.location) {
-            roomDescription = room.room_description;
+        if (room.name == response.data.save.location) {
+            roomDescription = room.description;
         }
     }
     yield put({ type: "SET_GAME_STATE", payload: response.data.save });
@@ -32,18 +35,19 @@ function* loadGame(action) {
 
 function* saveGame() {
     const gameState = yield select(gameStateSelector);
-    yield axios.post(`/api/saves`, gameState);
+    yield axios.post(`/api/saves/${gameState.game_id}`, gameState);
     yield put({ type: "GET_SAVE_DATA" });
 }
 
 function* overwriteSave(action) {
     const gameState = yield select(gameStateSelector);
-    yield axios.put(`/api/saves/${action.payload}`, gameState);
+    yield axios.put(`/api/saves/${gameState.game_id}/${action.payload}`, gameState);
     yield put({ type: "GET_SAVE_DATA" });
 }
 
 function* deleteSave(action) {
-    yield axios.delete(`/api/saves/${action.payload}`);
+    const gameState = yield select(gameStateSelector);
+    yield axios.delete(`/api/saves/${gameState.game_id}/${action.payload}`);
     yield put({ type: "GET_SAVE_DATA" });
 }
 

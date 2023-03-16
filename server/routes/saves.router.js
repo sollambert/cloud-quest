@@ -8,13 +8,15 @@ const router = express.Router();
 /**
  * GET route for save by id
  */
-router.get('/load/:id', rejectUnauthenticated, (req, res) => {
+router.get('/load/:game_id/:id', rejectUnauthenticated, (req, res) => {
   const query = `
-  SELECT save FROM saves
-  WHERE user_id = $1 AND id = $2;
+  SELECT save FROM saves s
+  JOIN games g ON g.id = s.game_id
+  WHERE user_id = $1 AND s.id = $2 AND g.id = $3;
   `
+  console.log(req.params);
 
-  pool.query(query, [req.user.id, req.params.id])
+  pool.query(query, [req.user.id, req.params.id, req.params.game_id])
     .then((dbRes) => {
       res.send(dbRes.rows[0]);
     })
@@ -27,36 +29,39 @@ router.get('/load/:id', rejectUnauthenticated, (req, res) => {
 /**
 * GET route for getting intial gamestate
 */
-router.get('/new', rejectUnauthenticated, (req, res) => {
+router.get('/new/:id', rejectUnauthenticated, (req, res) => {
   const roomQuery = `
-    SELECT * FROM rooms
-    ORDER BY id;
+    SELECT r.* FROM rooms r
+    JOIN games g ON g.id = r.game_id
+    WHERE g.id = $1
+    ORDER BY r.id;
     `
-  pool.query(roomQuery)
+  pool.query(roomQuery, [req.params.id])
     .then((dbRes) => {
       for (let index in dbRes.rows) {
         dbRes.rows[index].items = [];
       }
       const itemQuery = `
-      SELECT i.item_name, i.item_description, ri.room_id FROM items i
+      SELECT i.name, i.description, ri.room_id FROM items i
       JOIN rooms_items ri ON i.id = ri.item_id
-      JOIN rooms r ON r.id = ri.room_id;
+      JOIN rooms r ON r.id = ri.room_id
+      JOIN games g ON g.id = r.game_id
+      WHERE g.id = $1;
       `
 
-      pool.query(itemQuery)
+      pool.query(itemQuery, [req.params.id])
       .then((itemRes) => {
         for (item of itemRes.rows) {
             dbRes.rows[item.room_id - 1].items = [...dbRes.rows[item.room_id - 1].items, item];
             // console.log(dbRes.rows[item.room_id - 1]);
         }
         const newGameState = {
-          electricity: false,
-          house_locked: true,
+          game_id: req.params.id,
           location: "car",
           inventory: [
             // {
-            //   item_name: "key",
-            //   item_description: "Maybe this will get me in the front door.",
+            //   name: "key",
+            //   description: "Maybe this will get me in the front door.",
             //   item_interactions: "front door"
             // }
           ],
@@ -76,13 +81,14 @@ router.get('/new', rejectUnauthenticated, (req, res) => {
 });
 
 //get the save data for display on client
-router.get('/data', rejectUnauthenticated, (req, res) => {
+router.get('/data/:game_id', rejectUnauthenticated, (req, res) => {
   const roomQuery = `
-    SELECT id, timestamp FROM saves
-    WHERE user_id = $1
-    ORDER BY id;
+    SELECT s.id, timestamp FROM saves s
+    JOIN games g ON g.id = s.game_id
+    WHERE user_id = $1 AND g.id = $2
+    ORDER BY s.id;
     `
-  pool.query(roomQuery, [req.user.id])
+  pool.query(roomQuery, [req.user.id, req.params.game_id])
     .then((dbRes) => {
       res.send(dbRes.rows);
     })
@@ -95,16 +101,16 @@ router.get('/data', rejectUnauthenticated, (req, res) => {
 /**
  * POST route for adding a new save to database
  */
-router.post('/', rejectUnauthenticated, (req, res) => {
+router.post('/:game_id', rejectUnauthenticated, (req, res) => {
   const save = req.body;
   const timestamp = Date.now() / 1000;
 
   const query = `
-  INSERT INTO saves (save, user_id, timestamp)
-  VALUES($1, $2, to_timestamp($3));
+  INSERT INTO saves (save, user_id, timestamp, game_id)
+  VALUES($1, $2, to_timestamp($3), $4);
   `
 
-  pool.query(query, [save, req.user.id, timestamp])
+  pool.query(query, [save, req.user.id, timestamp, req.params.game_id])
   .then((dbRes) => {
     res.sendStatus(201);
   })
@@ -117,17 +123,17 @@ router.post('/', rejectUnauthenticated, (req, res) => {
 /**
  * PUT route for replacing a save on database
  */
-router.put('/:id', rejectUnauthenticated, (req, res) => {
+router.put('/:game_id/:id', rejectUnauthenticated, (req, res) => {
   const save = req.body;
   const timestamp = Date.now() / 1000;
 
   const query = `
   UPDATE saves
   SET save = $1, timestamp = to_timestamp($2)
-  WHERE id = $3 AND user_id = $4;
+  WHERE id = $3 AND user_id = $4 AND game_id = $5;
   `
 
-  pool.query(query, [save, timestamp, req.params.id, req.user.id])
+  pool.query(query, [save, timestamp, req.params.id, req.user.id, req.params.game_id])
   .then((dbRes) => {
     res.sendStatus(201);
   })
@@ -140,12 +146,12 @@ router.put('/:id', rejectUnauthenticated, (req, res) => {
 /**
  * Route for deleting save by ID
  */
-router.delete('/:id', rejectUnauthenticated, (req, res) => {
+router.delete('/:game_id/:id', rejectUnauthenticated, (req, res) => {
   const query = `
   DELETE FROM saves
-  WHERE user_id = $1 AND id = $2;
+  WHERE user_id = $1 AND id = $2 AND game_id = $3;
   `
-  pool.query(query, [req.user.id, req.params.id])
+  pool.query(query, [req.user.id, req.params.id, req.params.game_id])
   .then((dbRes) => {
     res.sendStatus(203);
   })

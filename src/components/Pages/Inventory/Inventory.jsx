@@ -12,10 +12,10 @@ function Inventory() {
                         {inventory.map((item, i) => {
                             return (<tr key={i}>
                                 <td>
-                                    {item.item_name}
+                                    {item.name}
                                 </td>
                                 <td>
-                                    {item.item_description}
+                                    {item.description}
                                 </td>
                             </tr>)
                         })}

@@ -12,7 +12,7 @@ router.get('/load/:game_id/:id', rejectUnauthenticated, (req, res) => {
   const query = `
   SELECT save FROM saves s
   JOIN games g ON g.id = s.game_id
-  WHERE user_id = $1 AND s.id = $2 AND g.id = $3;
+  WHERE s.user_id = $1 AND s.id = $2 AND g.id = $3;
   `
   console.log(req.params);
 
@@ -35,14 +35,14 @@ router.get('/new/:id', rejectUnauthenticated, (req, res) => {
     JOIN games g ON g.id = r.game_id
     WHERE g.id = $1
     ORDER BY r.id;
-    `
+    `;
   pool.query(roomQuery, [req.params.id])
     .then((dbRes) => {
       for (let index in dbRes.rows) {
         dbRes.rows[index].items = [];
       }
       const itemQuery = `
-      SELECT i.name, i.description, ri.room_id FROM items i
+      SELECT i.name, i.description, ri.room_id, r.id FROM items i
       JOIN rooms_items ri ON i.id = ri.item_id
       JOIN rooms r ON r.id = ri.room_id
       JOIN games g ON g.id = r.game_id
@@ -52,8 +52,12 @@ router.get('/new/:id', rejectUnauthenticated, (req, res) => {
       pool.query(itemQuery, [req.params.id])
       .then((itemRes) => {
         for (item of itemRes.rows) {
-            dbRes.rows[item.room_id - 1].items = [...dbRes.rows[item.room_id - 1].items, item];
-            // console.log(dbRes.rows[item.room_id - 1]);
+            dbRes.rows.map((room) => {
+              if (room.id == item.room_id) {
+                room.items.push(item);
+                return room;
+              }
+            });
         }
         const newGameState = {
           game_id: req.params.id,
@@ -85,7 +89,7 @@ router.get('/data/:game_id', rejectUnauthenticated, (req, res) => {
   const roomQuery = `
     SELECT s.id, timestamp FROM saves s
     JOIN games g ON g.id = s.game_id
-    WHERE user_id = $1 AND g.id = $2
+    WHERE s.user_id = $1 AND g.id = $2
     ORDER BY s.id;
     `
   pool.query(roomQuery, [req.user.id, req.params.game_id])

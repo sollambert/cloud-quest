@@ -20,6 +20,7 @@ import Home from '../Pages/Home/Home';
 import Help from '../Pages/Help/Help';
 import Saves from '../Pages/Saves/Saves';
 import Inventory from '../Pages/Inventory/Inventory';
+import GameSelector from '../GameSelector/GameSelector';
 
 import './App.css';
 
@@ -28,6 +29,7 @@ function App() {
   const dispatch = useDispatch();
 
   const user = useSelector(store => store.user);
+  const gameState = useSelector(store => store.gameState);
 
   useEffect(() => {
     dispatch({ type: 'FETCH_USER' });
@@ -39,7 +41,7 @@ function App() {
         <Nav />
         <Switch>
           {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-          <Redirect exact from="/" to="/home" />
+          <Redirect exact from="/" to="/select" />
 
           {/* Visiting localhost:3000/about will show the about page. */}
           <Route
@@ -84,12 +86,28 @@ function App() {
 
           <Route
             exact
+            path="/select"
+          >
+            {user.id ?
+              <>
+                {gameState.id ?
+                  <Redirect to="/home" />
+                  :
+                  <GameSelector/>
+                }
+              </>
+              : 
+              <Redirect to="/login"/>
+            }
+          </Route>
+          <Route
+            exact
             path="/login"
           >
             {user.id ?
               // If the user is already logged in, 
               // redirect to the /user page
-              <Redirect to="/home" />
+              <Redirect to="/select" />
               :
               // Otherwise, show the login page
               <LoginPage />
@@ -103,7 +121,7 @@ function App() {
             {user.id ?
               // If the user is already logged in, 
               // redirect them to the /user page
-              <Redirect to="/home" />
+              <Redirect to="/select" />
               :
               // Otherwise, show the registration page
               <RegisterPage />

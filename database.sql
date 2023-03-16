@@ -34,7 +34,6 @@ CREATE TABLE "items" (
 
 CREATE TABLE "rooms_items" (
 	"id" serial NOT NULL,
-	"game_id" int NOT NULL,
 	"room_id" int NOT NULL,
 	"item_id" int NOT NULL,
 	CONSTRAINT "rooms_items_pk" PRIMARY KEY ("id")
@@ -56,6 +55,7 @@ CREATE TABLE "saves" (
 CREATE TABLE "games" (
 	"id" serial NOT NULL,
 	"name" varchar(256),
+	"user_id" int,
 	CONSTRAINT "games_pk" PRIMARY KEY ("id")
 );
 
@@ -69,9 +69,8 @@ CREATE TABLE "games" (
 
 -- ALTER TABLE "games_rooms" ADD CONSTRAINT "games_rooms_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
 -- ALTER TABLE "games_rooms" ADD CONSTRAINT "games_rooms_fk1" FOREIGN KEY ("room_id") REFERENCES "rooms"("id");
-ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
-ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk1" FOREIGN KEY ("room_id") REFERENCES "rooms"("id");
-ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk2" FOREIGN KEY ("item_id") REFERENCES "items"("id");
+ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk0" FOREIGN KEY ("room_id") REFERENCES "rooms"("id");
+ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk1" FOREIGN KEY ("item_id") REFERENCES "items"("id");
 
 ALTER TABLE "saves" ADD CONSTRAINT "saves_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
 ALTER TABLE "saves" ADD CONSTRAINT "saves_fk1" FOREIGN KEY ("game_id") REFERENCES "games"("id");
@@ -79,8 +78,13 @@ ALTER TABLE "saves" ADD CONSTRAINT "saves_fk1" FOREIGN KEY ("game_id") REFERENCE
 ALTER TABLE "rooms" ADD CONSTRAINT "rooms_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
 ALTER TABLE "items" ADD CONSTRAINT "items_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
 
-insert into games ("name")
-VALUES('cloud-quest');
+ALTER TABLE "games" ADD CONSTRAINT "games_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
+
+insert into "user" ("username", "password")
+VALUES('admin', '$2a$10$eXaya1.jTeVgi2p1QmyeJ.bOG4B3TOdwpGKTTLXeDqkdFCvcxWhnK');
+
+insert into games ("name", "user_id")
+VALUES('cloud-quest', 1);
 
 --generate all rooms for initial database
 insert into rooms ("name", "game_id", "description", "image", "interactables", "exits")
@@ -100,7 +104,7 @@ VALUES('car',
     "description": "You see a bald man sitting on a throne made out of money. The image is unsettling and you can''t help but feel like his company controls most of the internet."
 }
 ]}',
-'{"exits": ["road", "basement", "bedroom", "closet", "shed"]}'),
+'{"exits": ["road"]}'),
 ('road',
 1,
 'You are on the road that leads to your childhood home. Everything seems to be smaller than you remember. The dirt road leading up to your house is inviting you in. Better get moving, you have a calculator to save.',
@@ -250,7 +254,7 @@ VALUES('car',
 				{
 					"new_description": "You see the little spiders gathered around the donut, still dancing and still snacking."
 				},
-				"message": "You hand the donut over to the spider. A few of its buddies come out of the webwork and they all start a synchronized dance with each other. Every now and then a spider stops dancing for a brief moment to snack on the delicious looking donut."
+				"message": "You place the donut in the spider''s web. A few of its buddies come out of the webwork and they all start a synchronized dance with each other. Every now and then a spider stops dancing for a brief moment to snack on the delicious looking donut."
 			}
 		}
 	}
@@ -302,11 +306,11 @@ VALUES('wires',
 'A beautifully crafted and somehow still fresh donut covered in sprinkles. Looks like it''s got raspberry filling.');
 
 -- relational keys for putting items into rooms
-insert into rooms_items (room_id, item_id, game_id)
+insert into rooms_items (room_id, item_id)
 VALUES
-(7, 3, 1),
-(8, 1, 1),
-(10, 2, 1);
+(7, 3),
+(8, 1),
+(10, 2);
 
 
 

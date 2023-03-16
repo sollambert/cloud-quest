@@ -1,7 +1,9 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import LoginPage from '../Pages/LoginPage/LoginPage';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
+
+import GameSelector from '../GameSelector/GameSelector';
 
 // A Custom Wrapper Component -- This will keep our code DRY.
 // Responsible for watching redux state, and returning an appropriate component
@@ -15,6 +17,7 @@ import {useSelector} from 'react-redux';
 
 function ProtectedRoute({ component, children, ...props }) {
   const user = useSelector((store) => store.user);
+  const game_id = useSelector((store) => store.gameState.game_id)
 
   // Component may be passed in as a "component" prop,
   // or as a child component.
@@ -27,12 +30,18 @@ function ProtectedRoute({ component, children, ...props }) {
       // are now passed along to the 'Route' Component
       {...props}
     >
-      {user.id ?
+      {user.id && game_id ?
         // If the user is logged in, show the protected component
         <ProtectedComponent />
         :
-        // Otherwise, redirect to the Loginpage
-        <LoginPage />
+        <>
+          {user.id ?
+            <GameSelector/>
+          :
+            // Otherwise, redirect to the Loginpage
+            <LoginPage />
+          }
+        </>
       }
     </Route>
 

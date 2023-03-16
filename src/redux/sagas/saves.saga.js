@@ -4,8 +4,11 @@ import axios from 'axios';
 const gameStateSelector = (state) => state.gameState;
 
 function* initializeGameState() {
-    let response = yield axios.get('/api/saves/new/1');
+    const gameState = yield select(gameStateSelector);
+    let response = yield axios.get(`/api/saves/new/${gameState.game_id}`);
     yield put({ type: "SET_GAME_STATE", payload: response.data });
+    yield put({ type: "CLEAR_HISTORY" });
+    yield put({ type: "CLEAR_SAVE_DATA"});
     yield put({ type: 'ADD_HISTORY', payload: response.data.rooms[0].description })
 }
 
@@ -26,7 +29,7 @@ function* loadGame(action) {
         }
     }
     yield put({ type: "SET_GAME_STATE", payload: response.data.save });
-    yield put({type: "CLEAR_HISTORY"});
+    yield put({ type: "CLEAR_HISTORY" });
     yield put({
         type: 'ADD_HISTORY',
         payload: roomDescription

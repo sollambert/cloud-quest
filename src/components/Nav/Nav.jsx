@@ -50,8 +50,8 @@ function Nav() {
         {/* {user.id && gameState.game_id == undefined && ( */}
         {user.id && (
           <>
-            <Link className="navLink" to="/select">
-              Game Select
+            <Link className="navLink" to="/games">
+              Games
             </Link>
           </>
         )}

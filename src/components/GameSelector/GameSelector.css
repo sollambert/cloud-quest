@@ -1,0 +1,9 @@
+.game-search-form {
+    display: flex;
+    flex-direction: row;
+    margin: 1em;
+    align-items: flex-start;
+}
+.game-search-input {
+    margin-right: 1em;
+}

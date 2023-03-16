@@ -41,7 +41,7 @@ function App() {
         <Nav />
         <Switch>
           {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-          <Redirect exact from="/" to="/select" />
+          <Redirect exact from="/" to="/games" />
 
           {/* Visiting localhost:3000/about will show the about page. */}
           <Route
@@ -86,7 +86,7 @@ function App() {
 
           <Route
             exact
-            path="/select"
+            path="/games"
           >
             {user.id ?
               <>
@@ -107,7 +107,7 @@ function App() {
             {user.id ?
               // If the user is already logged in, 
               // redirect to the /user page
-              <Redirect to="/select" />
+              <Redirect to="/games" />
               :
               // Otherwise, show the login page
               <LoginPage />
@@ -121,7 +121,7 @@ function App() {
             {user.id ?
               // If the user is already logged in, 
               // redirect them to the /user page
-              <Redirect to="/select" />
+              <Redirect to="/games" />
               :
               // Otherwise, show the registration page
               <RegisterPage />

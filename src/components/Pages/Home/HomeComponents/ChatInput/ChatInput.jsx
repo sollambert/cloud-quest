@@ -30,6 +30,7 @@ function ChatInput() {
     return (<>
         <label htmlFor="input"></label>
         <input
+            className="chat-input"
             autoComplete='off'
             autoFocus={true}
             onKeyDown={handleKeyDown}

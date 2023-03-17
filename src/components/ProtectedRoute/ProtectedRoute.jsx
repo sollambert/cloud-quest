@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import LoginPage from '../Pages/LoginPage/LoginPage';
 import { useSelector } from 'react-redux';
 
-import GameSelector from '../GameSelector/GameSelector';
+import GameSelector from '../Pages/GameSelector/GameSelector';
 
 // A Custom Wrapper Component -- This will keep our code DRY.
 // Responsible for watching redux state, and returning an appropriate component

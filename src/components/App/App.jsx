@@ -20,7 +20,7 @@ import Home from '../Pages/Home/Home';
 import Help from '../Pages/Help/Help';
 import Saves from '../Pages/Saves/Saves';
 import Inventory from '../Pages/Inventory/Inventory';
-import GameSelector from '../GameSelector/GameSelector';
+import GameSelector from '../Pages/GameSelector/GameSelector';
 
 import './App.css';
 

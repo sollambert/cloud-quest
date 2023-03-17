@@ -21,7 +21,7 @@ import Help from '../Pages/Help/Help';
 import Saves from '../Pages/Saves/Saves';
 import Inventory from '../Pages/Inventory/Inventory';
 import GameSelector from '../Pages/GameSelector/GameSelector';
-import EditPage from '../Pages/EditPage/EditPage';
+import GameCreator from '../Pages/GameCreator/GameCreator';
 
 import './App.css';
 
@@ -87,8 +87,8 @@ function App() {
 
           <Route
           exact
-          path="/edit/:id">
-            <EditPage />
+          path="/edit/:game_id">
+            <GameCreator />
           </Route>
 
           <Route

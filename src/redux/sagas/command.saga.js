@@ -5,13 +5,17 @@ const gameStateSelector = (state) => state.gameState;
 let gameState;
 
 function* useCommand(action) {
-    gameState = yield select(gameStateSelector);
-    const response = yield parseCommand(action.payload);
-    yield put({ type: 'ADD_HISTORY', payload: action.payload })
-    for (let message of response.messages) {
-        yield put({ type: 'ADD_HISTORY', payload: message })
+    try {
+        gameState = yield select(gameStateSelector);
+        const response = yield parseCommand(action.payload);
+        yield put({ type: 'ADD_HISTORY', payload: action.payload })
+        for (let message of response.messages) {
+            yield put({ type: 'ADD_HISTORY', payload: message })
+        }
+        if (response.callback) { yield response.callback() }
+    } catch (error) {
+        console.error(error);
     }
-    if (response.callback) { yield response.callback() }
 }
 
 function* parseCommand(message) {

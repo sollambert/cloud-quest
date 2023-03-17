@@ -103,11 +103,14 @@ function GameCreator() {
                                 </span>
                             )
                         })}
+                        <button className="btn">UPDATE GAME INFO</button>
                     </div>
+                    <button className="btn">NEW ROOM</button>
                     <div className="room-cards">
                         {rooms && rooms.map((room) => {
                             return (
                                 <div key={room.id} className={"room-container"} onClick={() => setRoomEditing(room.id)}>
+                                    ID: {room.id} 
                                     <div className="room-container-image">
                                         {room.image.split('\\n').map((newLine, i) => {
                                             return (
@@ -117,7 +120,9 @@ function GameCreator() {
                                             )
                                         })}
                                     </div>
-                                    {room.name}
+                                    <span>
+                                        Name: {room.name}
+                                    </span>
                                 </div>
                             )
                         })}

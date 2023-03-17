@@ -4,22 +4,34 @@ import axios from 'axios';
 const gameStateSelector = (state) => state.gameState;
 
 function* fetchGames(action) {
-    // console.log(action.payload);
-    let response = yield axios.get('/api/games', {params: action.payload});
-    yield put({type: "SET_GAMES", payload: response.data});
-    (action.callback ? yield action.callback() : '');
+    try {
+        // console.log(action.payload);
+        let response = yield axios.get('/api/games', { params: action.payload });
+        yield put({ type: "SET_GAMES", payload: response.data });
+        (action.callback ? yield action.callback() : '');
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function* selectGame(action) {
-    const gameState = yield select(gameStateSelector);
-    gameState.game_id = action.payload;
-    yield put({type: 'SET_GAME_STATE', payload: gameState});
-    yield put({type: "INIT_GAME_STATE"});
+    try {
+        const gameState = yield select(gameStateSelector);
+        gameState.game_id = action.payload;
+        yield put({ type: 'SET_GAME_STATE', payload: gameState });
+        yield put({ type: "INIT_GAME_STATE" });
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function* fetchGameEditDetails(action) {
-    let response = yield axios.get(`/api/games/edit/${action.payload}`);
-    yield put({type: 'SET_CREATOR_INFO', payload: response.data});
+    try {
+        let response = yield axios.get(`/api/games/edit/${action.payload}`);
+        yield put({ type: 'SET_CREATOR_INFO', payload: response.data });
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function* watcherSaga() {

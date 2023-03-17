@@ -4,6 +4,8 @@ const {
     rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 const router = express.Router();
+const forbidden = new Error('User does not have ownership of game');
+forbidden.code = 403;
 
 router.get('/', rejectUnauthenticated, (req, res) => {
     const queryParams = req.query;
@@ -28,7 +30,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
         })
 })
 
-router.get('/edit/:id', rejectUnauthenticated, (req, res) => {
+router.get('/edit/:id', rejectUnauthenticated, async (req, res) => {
 
     const gameQuery = `
     SELECT g.name, g.start_location, g.inventory from games g
@@ -53,97 +55,131 @@ router.get('/edit/:id', rejectUnauthenticated, (req, res) => {
 
     let gameObject = {}
 
-    pool.query(gameQuery, [req.params.id, req.user.id])
-        .then(gameResult => {
-            gameObject.gameInfo = gameResult.rows[0];
-            pool.query(roomQuery, [req.params.id, req.user.id])
-                .then((roomResult) => {
-                    // console.log(roomResult.rows);
-                    gameObject.rooms = roomResult.rows;
-                    pool.query(itemsQuery, [req.params.id, req.user.id])
-                        .then((itemsRes) => {
-                            gameObject.items = itemsRes.rows;
-                            pool.query(itemRoomsQuery, [req.params.id, req.user.id])
-                                .then((itemsRoomsRes) => {
-                                    gameObject.items.map((item) => {
-                                        itemsRoomsRes.rows.map((roomItem) => {
-                                            if (roomItem.item_id == item.id) {
-                                                // console.log("room id", roomItem.room_id, "item id", item.id)
-                                                item.room_id = roomItem.room_id;
-                                                return roomItem;
-                                            }
-                                        })
-                                        // console.log(item);
-                                        return item;
-                                    })
-                                    res.send(gameObject);
-                                })
-                                .catch((err) => {
-                                    console.error(err);
-                                    res.sendStatus(500);
-                                })
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            res.sendStatus(500);
-                        })
-                })
-                .catch((err) => {
-                    console.error(err);
-                    res.sendStatus(500);
-                })
+    const connection = await pool.connect();
+
+    try {
+        await connection.query('BEGIN');
+        const gameRes = await connection.query(gameQuery, [req.params.id, req.user.id])
+        gameObject.gameInfo = gameRes.rows[0];
+        const roomRes = await connection.query(roomQuery, [req.params.id, req.user.id])
+        gameObject.rooms = roomRes.rows;
+        const itemRes = await connection.query(itemsQuery, [req.params.id, req.user.id])
+        gameObject.items = itemRes.rows;
+        const itemRoomsRes = await connection.query(itemRoomsQuery, [req.params.id, req.user.id])
+        gameObject.items.map((item) => {
+            itemRoomsRes.rows.map((roomItem) => {
+                if (roomItem.item_id == item.id) {
+                    item.room_id = roomItem.room_id;
+                    return roomItem;
+                }
+            })
+            return item;
         })
-        .catch((err) => {
-            console.error(err);
+        await connection.query('COMMIT');
+        res.send(gameObject);
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
             res.sendStatus(500);
-        })
+        }
+    } finally {
+        connection.release;
+    }
 })
 
-router.post('/item', rejectUnauthenticated, (req, res) => {
-    const query = `
+router.post('/item/:game_id', rejectUnauthenticated, async (req, res) => {
+    const itemQuery = `
     INSERT INTO "items" (game_id, name, description)
     VALUES($1, $2, $3)
     RETURNING id;`
+
     const roomsItemsQuery = `
     INSERT INTO "rooms_items" (room_id, item_id)
-    VALUES($1, $2);
-    `
-    pool.query(query, [req.body.id, req.body.name, req.body.description])
-        .then((dbRes) => {
-            const newId = dbRes.rows[0].id;
-            if (req.body.room_id) {
-                pool.query(roomsItemsQuery, [req.body.room_id, newId])
-                .then((riRes) => {
-                    res.sendStatus(201);
-                })
-                .catch((err) => {
-                    res.sendStatus(500);
-                    console.error(err);
-                })
+    VALUES($1, $2);`
+
+    const ownershipQuery = `
+    SELECT g.name FROM games g
+    WHERE g.id = $1 AND g.user_id = $2;`
+
+    const roomOwnershipQuery = `
+    SELECT * FROM games g
+    JOIN rooms r ON r.game_id = g.id
+    WHERE g.id = $1 AND r.game_id = $1 AND r.id = $2 AND g.user_id = $3;`
+
+    const connection = await pool.connect();
+
+    try {
+        await connection.query('BEGIN');
+        const ownerRes = await connection.query(ownershipQuery, 
+            [req.params.game_id, req.user.id])
+        if (ownerRes.rows.length == 0) {
+            throw forbidden;
+        }
+        if (req.body.room_id) {
+            let roomOwnerRes = await connection.query(roomOwnershipQuery, 
+                [req.params.game_id, req.body.room_id, req.user.id]);
+            if (roomOwnerRes.rows.length == 0) {
+                throw forbidden;
             } else {
-                res.sendStatus(201);
+                const itemRes = await connection.query(itemQuery,
+                    [req.params.game_id, req.body.name, req.body.description]);
+                const newId = itemRes.rows[0].id
+                await connection.query(roomsItemsQuery, [req.body.room_id, newId]);
             }
-        })
-        .catch((err) => {
+        } else {
+            await connection.query(itemQuery, 
+                [req.params.game_id, req.body.name, req.body.description]);
+        }
+        await connection.query('COMMIT');
+        res.sendStatus(201);
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
             res.sendStatus(500);
-            console.error(err);
-        })
+        }
+    } finally {
+        connection.release;
+    }
 })
 
-router.delete('/item/:game_id/:item_id', (req, res) => {
-    const query = `
-    DELETE FROM items
-    WHERE id = $1 AND game_id = $2;
+router.delete('/item/:game_id/:item_id', async (req, res) => {
+    const ownershipQuery = `
+    SELECT * FROM games g
+    JOIN items i on i.game_id = g.id
+    WHERE g.id = $1 AND i.game_id = $1 AND i.id = $2 AND g.user_id = $3;`
+
+    const deleteQuery = `
+    DELETE FROM items i
+    WHERE id = $1;
     `
 
-    pool.query(query, [req.params.item_id, req.params.game_id])
-    .then((dbRes) => {
+    const connection = await pool.connect();
+    try {
+        await connection.query('BEGIN')
+        const ownership = await connection.query(ownershipQuery, [req.params.game_id, req.params.item_id, req.user.id]);
+        if (ownership.rows.length == 0) {
+            throw(forbidden);
+        }
+        await connection.query(deleteQuery, [req.params.item_id])
+        await connection.query('COMMIT');
         res.sendStatus(203);
-    })
-    .catch((err) => {
-        console.error(err);
-        res.sendStatus(500);
-    })
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
+            res.sendStatus(500);
+        }
+    } finally {
+        connection.release;
+    }
 })
 
 module.exports = router;

@@ -36,7 +36,7 @@ router.get('/', rejectUnauthenticated, (req,res) => {
 router.get('/edit/:id', rejectUnauthenticated, (req,res) => {
 
     const roomQuery = `
-    SELECT * FROM rooms r
+    SELECT r.* FROM rooms r
     JOIN games g ON g.id = r.game_id
     WHERE g.id = $1 AND g.user_id = $2;`
 

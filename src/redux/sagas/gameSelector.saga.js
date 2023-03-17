@@ -17,9 +17,15 @@ function* selectGame(action) {
     yield put({type: "INIT_GAME_STATE"});
 }
 
+function* fetchGameEditDetails(action) {
+    let response = yield axios.get(`/api/games/edit/${action.payload}`);
+    yield put({type: 'SET_CREATOR_INFO', payload: response.data});
+}
+
 function* watcherSaga() {
     yield takeEvery("FETCH_GAMES", fetchGames);
     yield takeEvery("SELECT_GAME", selectGame);
+    yield takeEvery("FETCH_GAME_EDIT_DETAILS", fetchGameEditDetails);
 }
 
 export default watcherSaga;

@@ -35,6 +35,11 @@ function GameSelector() {
         setSearchBuffer({ ...searchBuffer, [key]: e.target.value });
     }
 
+    const handleEdit = (id) => {
+        dispatch({type: "CLEAR_GAME_STATE"});
+        history.push(`/edit/${id}`);
+    }
+
     // console.log(games);
     // console.log(user);
     return (
@@ -77,7 +82,7 @@ function GameSelector() {
                             </td>
                             {user.username == game.author ?
                                 <td className='btn-td'>
-                                    <button className="btn">
+                                    <button className="btn" onClick={() => handleEdit(game.id)}>
                                         EDIT
                                     </button>
                                 </td>

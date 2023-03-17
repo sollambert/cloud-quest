@@ -62,8 +62,8 @@ CREATE TABLE "games" (
 );
 
 --foreign keys
-ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk0" FOREIGN KEY ("room_id") REFERENCES "rooms"("id");
-ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk1" FOREIGN KEY ("item_id") REFERENCES "items"("id");
+ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk0" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE CASCADE;
+ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk1" FOREIGN KEY ("item_id") REFERENCES "items"("id") ON DELETE CASCADE;
 
 ALTER TABLE "saves" ADD CONSTRAINT "saves_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
 ALTER TABLE "saves" ADD CONSTRAINT "saves_fk1" FOREIGN KEY ("game_id") REFERENCES "games"("id");

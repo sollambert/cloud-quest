@@ -14,12 +14,8 @@ function EditPage() {
         dispatch({ type: "FETCH_GAME_EDIT_DETAILS", payload: id });
     }, []);
 
-
-    // console.log(id);
-    // console.log(roomEditing);
     return (
         <div className="room-cards">
-            {/* {JSON.stringify(gameInfo)} */}
             {roomEditing == -1 && gameInfo.rooms && gameInfo.rooms.map((room) => {
                 return (
                     <div key={room.id} className={"room-container"} onClick={() => setRoomEditing(room.id)}>

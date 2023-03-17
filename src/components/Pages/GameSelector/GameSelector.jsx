@@ -39,9 +39,7 @@ function GameSelector() {
         dispatch({type: "CLEAR_GAME_STATE"});
         history.push(`/edit/${id}`);
     }
-
-    // console.log(games);
-    // console.log(user);
+    
     return (
         <>
             <form className="game-search-form" onSubmit={(e) => { handleSubmit(e) }}>

@@ -21,7 +21,6 @@ function* getSaveData() {
 function* loadGame(action) {
     const gameState = yield select(gameStateSelector);
     let response = yield axios.get(`/api/saves/load/${gameState.game_id}/${action.payload}`);
-    console.log(response.data)
     let roomDescription = '';
     for (let room of response.data.save.rooms) {
         if (room.name == response.data.save.location) {

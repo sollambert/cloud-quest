@@ -7,20 +7,29 @@ function Inventory() {
     return (
         <>
             {inventory != undefined ?
-                <table>
-                    <tbody>
-                        {inventory.map((item, i) => {
-                            return (<tr key={i}>
-                                <td>
-                                    {item.name}
-                                </td>
-                                <td>
-                                    {item.description}
-                                </td>
-                            </tr>)
-                        })}
-                    </tbody>
-                </table> : ''}
+                <>
+                    {inventory.length == 0 ?
+                        <p>
+                            You don't currently have any items.
+                        </p>
+                        : <>
+                            <table>
+                                <tbody>
+                                    {inventory.map((item, i) => {
+                                        return (<tr key={i}>
+                                            <td>
+                                                {item.name}
+                                            </td>
+                                            <td>
+                                                {item.description}
+                                            </td>
+                                        </tr>)
+                                    })}
+                                </tbody>
+                            </table> </>
+                    }
+                </>
+                : ''}
         </>
     )
 }

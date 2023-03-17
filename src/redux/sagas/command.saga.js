@@ -89,7 +89,7 @@ function* parseCommand(message) {
                     // console.log(item.name)
                     if (item.name == split[1]) {
                         for (let interactable of interactables) {
-                            console.log(interactable.use);
+                            // console.log(interactable.use);
                             if (interactable.name.includes(split[2])) {
                                 if (interactable.use?.[item.name]) {
                                     if (interactable.name.includes(split[2])) {
@@ -123,11 +123,11 @@ function* parseCommand(message) {
                 split[1] = `${split[1]} ${split[2]}`;
             }
             for (let index in interactables) {
-                console.log(interactables[index])
+                // console.log(interactables[index])
                 if (interactables[index].name.includes(split[1])) {
                     response.messages.push(`You don't know how you can move the ${split[1]}`);
                     if (interactables[index]?.move) {
-                        console.log(interactables[index]?.move)
+                        // console.log(interactables[index]?.move)
                         response.messages.push(`You move the ${split[1]}...`);
                         response = handleMove(index, room, response)
                         return response;
@@ -215,7 +215,7 @@ function handleMove(interactIndex, room, response) {
         if (gameState.rooms[roomIndex].name == room.name) {
             if (interactable.move?.add_interaction) {
                 for (let interaction of Object.keys(interactable.move.add_interaction)) {
-                    console.log('interact index', index, 'interaction', interaction);
+                    // console.log('interact index', index, 'interaction', interaction);
                     gameState.rooms[roomIndex].interactables.interactables[index][interaction] = interactable.move.add_interaction[interaction];
                 }
                 if (interactable.move.new_description) {
@@ -251,12 +251,12 @@ function useItem(item, room, response) {
         if (interactable?.use?.[item.name]) {
             const interactionItem = interactable.use[item.name];
             if (interactionItem.condition) {
-                console.log('item conditions', interactionItem.condition);
+                // console.log('item conditions', interactionItem.condition);
                 let conditionsMet = true;
                 for (let condition of interactionItem.condition) {
-                    console.log("condition", condition);
-                    if (gameState[condition] == false) {
-                        console.log('condition state', gameState[condition]);
+                    // console.log("condition", condition);
+                    if (gameState[condition] != true) {
+                        // console.log('condition state', gameState[condition]);
                         response.messages.push(interactionItem.condition_message);
                         removeItem = false;
                         conditionsMet = false;
@@ -267,7 +267,7 @@ function useItem(item, room, response) {
                     break;
                 }
             }
-            console.log(interactable.use[item.name]);
+            // console.log(interactable.use[item.name]);
             response.messages.push(interactionItem.message);
             const effects = Object.keys(interactionItem.effect);
             // console.log(effects);
@@ -281,7 +281,7 @@ function useItem(item, room, response) {
                     // console.log('old exits', gameState.rooms[roomIndex].exits.exits, 'new exits',interactionItem.effect.new_exits )
                     gameState.rooms[roomIndex].exits.exits = interactionItem.effect.new_exits;
                 } else {
-                    console.log(gameState[effect], interactionItem.effect[effect])
+                    // console.log(gameState[effect], interactionItem.effect[effect])
                     gameState[effect] = interactionItem.effect[effect];
                 }
             }
@@ -316,7 +316,7 @@ function handleOpen(interactIndex, room, response) {
             }
             if (interactable.open?.add_interaction) {
                 for (let interaction of Object.keys(interactable.open.add_interaction)) {
-                    console.log('interact index', interactIndex, 'interaction', interaction);
+                    // console.log('interact index', interactIndex, 'interaction', interaction);
                     gameState.rooms[roomIndex].interactables.interactables[interactIndex][interaction] = interactable.open.add_interaction[interaction];
                 }
                 if (interactable.open.new_description) {

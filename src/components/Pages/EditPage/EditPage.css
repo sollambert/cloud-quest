@@ -1,0 +1,17 @@
+.room-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.room-container {
+    margin: .4em;
+    padding: .25em;
+    border: 1px solid;
+    border-color: #12ff1e;
+}
+
+.room-container-image {
+    font-size: 6pt;
+    line-height: .85em;
+}

@@ -14,7 +14,7 @@ router.get('/load/:game_id/:id', rejectUnauthenticated, (req, res) => {
   JOIN games g ON g.id = s.game_id
   WHERE s.user_id = $1 AND s.id = $2 AND g.id = $3;
   `
-  console.log(req.params);
+  // console.log(req.params);
 
   pool.query(query, [req.user.id, req.params.id, req.params.game_id])
     .then((dbRes) => {

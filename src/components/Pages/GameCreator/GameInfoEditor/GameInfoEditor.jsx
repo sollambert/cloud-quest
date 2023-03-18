@@ -45,7 +45,7 @@ function GameInfoEditor({ game, items }) {
     }
 
     const updateGameInfo = () => {
-        dispatch({ type: "SAVE_GAME_INFO_CREATOR", payload: gameInfo });
+        dispatch({ type: "SAVE_GAME_INFO_EDITOR", payload: gameInfo });
     }
 
     return (

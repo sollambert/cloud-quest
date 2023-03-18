@@ -27,7 +27,7 @@ router.get('/:id', rejectUnauthenticated, async (req, res) => {
     SELECT r.* FROM rooms r
     JOIN games g ON g.id = r.game_id
     WHERE g.id = $1 AND g.user_id = $2
-    ORDER BY r.name;`
+    ORDER BY r.id;`
 
     const itemRoomsQuery = `
     SELECT ri.id, ri.room_id, ri.item_id FROM items i
@@ -39,7 +39,8 @@ router.get('/:id', rejectUnauthenticated, async (req, res) => {
     const itemsQuery = `
     SELECT i.id, i.name, i.description FROM items i
     JOIN games g on g.id = i.game_id
-    WHERE g.id = $1 AND g.user_id = $2;`
+    WHERE g.id = $1 AND g.user_id = $2
+    ORDER BY i.id;`
 
     let gameObject = {}
 
@@ -75,6 +76,7 @@ router.get('/:id', rejectUnauthenticated, async (req, res) => {
         }
     } finally {
         connection.release;
+        res.end();
     }
 })
 
@@ -107,6 +109,7 @@ router.put('/info/:game_id', rejectUnauthenticated, async (req, res) => {
         }
     } finally {
         connection.release;
+        res.end();
     }
 })
 
@@ -156,6 +159,73 @@ router.post('/item/:game_id', rejectUnauthenticated, async (req, res) => {
         }
     } finally {
         connection.release;
+        res.end();
+    }
+})
+
+router.put('/item/:game_id/:item_id', async (req, res) => {
+    const ownershipQuery = `
+    SELECT * FROM games g
+    JOIN items i on i.game_id = g.id
+    WHERE g.id = $1 AND i.game_id = $1 AND i.id = $2 AND g.user_id = $3;`
+
+    const updateQuery = `
+    UPDATE items
+    SET name = $1, description = $2
+    WHERE id = $3;
+    `
+    const checkRoomsItemsQuery = `
+    SELECT ri.id FROM rooms_items ri
+    JOIN items i ON i.id = ri.item_id
+    WHERE ri.item_id = $1;`
+
+    const roomsItemsQuery = `
+    INSERT INTO "rooms_items" (room_id, item_id)
+    VALUES($1, $2);`
+
+    const roomsItemsUpdateQuery = `
+    UPDATE rooms_items
+    SET room_id = $1, item_id = $2
+    WHERE id = $3;`
+
+    const connection = await pool.connect();
+    try {
+        await connection.query('BEGIN')
+        const ownership = await connection.query(ownershipQuery, [req.params.game_id, req.params.item_id, req.user.id]);
+        if (ownership.rows.length == 0) {
+            throw(forbidden);
+        }
+        await connection.query(updateQuery, [req.body.name, req.body.description, req.params.item_id])
+        if (req.body.room_id) {
+            const roomOwnership = await connection.query(roomOwnershipQuery, [req.params.game_id, req.body.room_id, req.user.id]);
+            if (roomOwnership.rows.length == 0) {
+                throw(forbidden);
+            }
+            const riResult = await connection.query(checkRoomsItemsQuery, [req.params.item_id])
+            if (riResult.rows.length == 0) {
+                await connection.query(roomsItemsQuery, [req.body.room_id, req.params.item_id])
+            } else {
+                await connection.query(roomsItemsUpdateQuery,
+                    [
+                        req.body.room_id,
+                        req.params.item_id,
+                        riResult.rows[0].id
+                    ])
+            }
+        }
+        await connection.query('COMMIT');
+        res.sendStatus(203);
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
+            res.sendStatus(500);
+        }
+    } finally {
+        connection.release;
+        res.end();
     }
 })
 
@@ -190,6 +260,7 @@ router.delete('/item/:game_id/:item_id', async (req, res) => {
         }
     } finally {
         connection.release;
+        res.end();
     }
 })
 
@@ -228,6 +299,7 @@ router.post('/room', async (req, res) => {
         }
     } finally {
         connection.release;
+        res.end();
     }
 })
 
@@ -268,6 +340,7 @@ router.put('/room/:roomId', async (req, res) => {
         }
     } finally {
         connection.release;
+        res.end();
     }
 })
 
@@ -302,6 +375,7 @@ router.delete('/room/:game_id/:room_id', async (req, res) => {
         }
     } finally {
         connection.release;
+        res.end();
     }
 })
 

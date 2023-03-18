@@ -193,6 +193,44 @@ router.delete('/item/:game_id/:item_id', async (req, res) => {
     }
 })
 
+router.post('/room', async (req, res) => {
+    const insertQuery = `
+    INSERT INTO rooms (game_id, name, image, description, exits, interactables)
+    VALUES($1, $2, $3, $4, $5, $6);`
+
+    const connection = await pool.connect();
+    try {
+        await connection.query('BEGIN');
+        const ownership = await connection.query(ownershipQuery, [req.body.game_id, req.user.id]);
+        
+        if (ownership.rows.length == 0) {
+            throw forbidden;
+        } else {
+            await connection.query(insertQuery,
+                [
+                    req.body.game_id,
+                    req.body.name,
+                    req.body.image,
+                    req.body.description,
+                    JSON.stringify(req.body.exits),
+                    JSON.stringify(req.body.interactables)
+                ])
+        }
+        await connection.query('COMMIT');
+        res.sendStatus(201);
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
+            res.sendStatus(500);
+        }
+    } finally {
+        connection.release;
+    }
+})
+
 router.put('/room/:roomId', async (req, res) => {
     const updateQuery = `
     UPDATE rooms
@@ -220,6 +258,40 @@ router.put('/room/:roomId', async (req, res) => {
         }
         await connection.query('COMMIT');
         res.sendStatus(201);
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
+            res.sendStatus(500);
+        }
+    } finally {
+        connection.release;
+    }
+})
+
+router.delete('/room/:game_id/:room_id', async (req, res) => {
+    const ownershipQuery = `
+    SELECT * FROM games g
+    JOIN rooms r on r.game_id = g.id
+    WHERE g.id = $1 AND r.game_id = $1 AND r.id = $2 AND g.user_id = $3;`
+
+    const deleteQuery = `
+    DELETE FROM rooms r
+    WHERE id = $1;
+    `
+
+    const connection = await pool.connect();
+    try {
+        await connection.query('BEGIN')
+        const ownership = await connection.query(ownershipQuery, [req.params.game_id, req.params.room_id, req.user.id]);
+        if (ownership.rows.length == 0) {
+            throw(forbidden);
+        }
+        await connection.query(deleteQuery, [req.params.room_id])
+        await connection.query('COMMIT');
+        res.sendStatus(203);
     } catch (error) {
         if (error.code == 403) {
             res.sendStatus(403)

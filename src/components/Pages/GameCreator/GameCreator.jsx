@@ -13,7 +13,7 @@ function GameCreator() {
     const dispatch = useDispatch();
     const history = useHistory();
     const game = useSelector(store => store.gameCreator);
-    const [roomEditing, setRoomEditing] = useState(-1);
+    const [roomEditing, setRoomEditing] = useState(0);
 
     const [rooms, setRooms] = useState(game.rooms);
     const [items, setItems] = useState(game.items);
@@ -36,11 +36,11 @@ function GameCreator() {
 
     return (
         <>
-            {roomEditing == -1 ?
+            {roomEditing == 0 ?
                 <>
                     <GameInfoEditor game={game} items={items} />
                     <button className="btn" onClick={play}>PLAY</button>
-                    <button className="btn">NEW ROOM</button>
+                    <button className="btn" onClick={() => setRoomEditing(-1)}>NEW ROOM</button>
                     <div className="room-cards">
                         {rooms && rooms.map((room) => {
                             return (
@@ -66,13 +66,26 @@ function GameCreator() {
                 </>
                 :
                 <>
-                    <RoomEditor
-                    room={rooms.filter((room) => {
-                        if (room.id == roomEditing) {
-                            return room;
-                        }
-                    })[0]}
-                    cancel={() => setRoomEditing(-1)}/>
+                {roomEditing == -1 ?
+                <RoomEditor room={{
+                    game_id,
+                    id: -1,
+                    description: '',
+                    exits: [],
+                    image: '',
+                    interactables: [],
+                    name: '',
+                }}
+                cancel={() => setRoomEditing(0)}/>
+                : 
+                <RoomEditor
+                room={rooms.filter((room) => {
+                    if (room.id == roomEditing) {
+                        return room;
+                    }
+                })[0]}
+                cancel={() => setRoomEditing(0)}/>
+                }
                 </>
             }
         </>

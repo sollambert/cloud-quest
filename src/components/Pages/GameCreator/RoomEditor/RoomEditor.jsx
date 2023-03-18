@@ -1,9 +1,10 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 function RoomEditor({ room, cancel }) {
 
     const dispatch = useDispatch();
+    const errors = useSelector(store => store.errors);
 
     const [roomInfo, setRoomInfo] = useState({
         id: -1,
@@ -15,11 +16,13 @@ function RoomEditor({ room, cancel }) {
     });
 
     useEffect(() => {
-        setRoomInfo({
-            ...room,
-            exits: JSON.stringify(room.exits),
-            interactables: JSON.stringify(room.interactables, null, 4)
-        });
+        // if (room.id != -1) {
+            setRoomInfo({
+                ...room,
+                exits: JSON.stringify(room.exits),
+                interactables: JSON.stringify(room.interactables, null, 4)
+            });
+        // }
     }, [room]);
 
     const handleChange = (e, key) => {
@@ -30,8 +33,12 @@ function RoomEditor({ room, cancel }) {
         try {
             const interactables = JSON.parse(roomInfo.interactables);
             const exits = JSON.parse(roomInfo.exits);
+            let type = "SAVE_ROOM_CREATOR"
+            if (room.id == -1) {
+                type = "SAVE_NEW_ROOM_CREATOR"
+            }
             dispatch({
-                type: "SAVE_ROOM_CREATOR",
+                type,
                 payload:
                 {
                     ...roomInfo,
@@ -40,12 +47,26 @@ function RoomEditor({ room, cancel }) {
                 }, callback: cancel
             });
         } catch (error) {
+            dispatch({ type: 'JSON_PARSE_ERROR', payload: error.message});
             console.error(error);
         }
     }
 
+    const deleteRoom = () => {
+        dispatch({
+            type: "DELETE_ROOM_CREATOR",
+            payload: {game_id: room.game_id, id: roomInfo.id},
+            callback: cancel
+        })
+    }
+
     return (
         <>
+            {errors.editorMessage && (
+                <h3 className="alert" role="alert">
+                    {errors.editorMessage}
+                </h3>
+            )}
             <div>
                 <label htmlFor="name">Name: </label>
                 <input
@@ -89,13 +110,21 @@ function RoomEditor({ room, cancel }) {
                     value={roomInfo.exits}
                     onChange={e => handleChange(e, "exits")}
                 />
-
-                width: 98vw;
-                height: 20vw;
             </div>
-            <div>
-                <button className="btn" onClick={saveRoom}>SAVE</button>
-                <button className="btn" onClick={cancel}>GO BACK</button>
+            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                <div>
+                    <button className="btn" onClick={saveRoom}>SAVE</button>
+                    <button className="btn" onClick={cancel}>GO BACK</button>
+                </div>
+                {roomInfo.id != -1 ?
+                
+                <div style={{alignSelf: "right"}}>
+                    <button
+                        style={{backgroundColor: "red", alignSelf: "right"}}
+                        className="btn" 
+                        onClick={deleteRoom}>DELETE</button>
+                </div>
+                : ''}
             </div>
         </>
     )

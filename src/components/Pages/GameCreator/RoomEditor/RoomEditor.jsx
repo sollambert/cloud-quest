@@ -33,9 +33,9 @@ function RoomEditor({ room, cancel }) {
         try {
             const interactables = JSON.parse(roomInfo.interactables);
             const exits = JSON.parse(roomInfo.exits);
-            let type = "SAVE_ROOM_CREATOR"
+            let type = "SAVE_ROOM_EDITOR"
             if (room.id == -1) {
-                type = "SAVE_NEW_ROOM_CREATOR"
+                type = "SAVE_NEW_ROOM_EDITOR"
             }
             dispatch({
                 type,
@@ -54,7 +54,7 @@ function RoomEditor({ room, cancel }) {
 
     const deleteRoom = () => {
         dispatch({
-            type: "DELETE_ROOM_CREATOR",
+            type: "DELETE_ROOM_EDITOR",
             payload: {game_id: room.game_id, id: roomInfo.id},
             callback: cancel
         })

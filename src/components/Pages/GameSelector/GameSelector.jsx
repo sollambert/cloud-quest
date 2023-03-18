@@ -28,7 +28,6 @@ function GameSelector() {
 
     const handleSubmit = () => {
         dispatch({ type: "FETCH_GAMES", payload: { name: searchBuffer.name, author: searchBuffer.author }, callback: clearInput })
-
     }
 
     const handleChange = (e, key) => {
@@ -36,24 +35,36 @@ function GameSelector() {
     }
 
     const handleEdit = (id) => {
-        dispatch({type: "CLEAR_GAME_STATE"});
+        dispatch({ type: "CLEAR_GAME_STATE" });
         history.push(`/edit/${id}`);
     }
-    
+
     return (
         <>
-            <form className="game-search-form" onSubmit={(e) => { handleSubmit(e) }}>
-                <div className="game-search-input">
-                    <label htmlFor="game-search-name">Name:</label>
-                    <input type="text" onChange={(e) => handleChange(e, 'name')} value={searchBuffer.name}></input>
+            <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignContent: "center"}}>
+                <form className="game-search-form" onSubmit={(e) => { handleSubmit(e) }}>
+                    <div className="game-search-input">
+                        <label htmlFor="game-search-name">Name:</label>
+                        <input type="text" onChange={(e) => handleChange(e, 'name')} value={searchBuffer.name}></input>
+                    </div>
+                    <div className="game-search-input">
+                        <label htmlFor="game-search-author">Author:</label>
+                        <input type="text" onChange={(e) => handleChange(e, 'author')} value={searchBuffer.author}></input>
+                    </div>
+                    <div>
+                        <button type="submit" className="btn">SEARCH</button>
+                    </div>
+                </form>
+                <div
+                style={{alignSelf: "flex-end"}}>
+                    <button className="btn">CREATE</button>
                 </div>
-                <div className="game-search-input">
-                    <label htmlFor="game-search-author">Author:</label>
-                    <input type="text" onChange={(e) => handleChange(e, 'author')} value={searchBuffer.author}></input>
-                </div>
-                <button type="submit" className="btn">SEARCH</button>
-            </form>
-            <button className="btn">CREATE</button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -68,14 +79,10 @@ function GameSelector() {
                 </thead>
                 <tbody>
                     {games.map((game) => {
-                        let colSpan = 2;
-                        if (user.username == game.author) {
-                            colSpan = 1;
-                        }
                         return (<tr key={game.id}>
                             <td>{game.name}</td>
                             <td>{game.author}</td>
-                            <td className='btn-td' colSpan={colSpan}>
+                            <td className='btn-td' colSpan={(user.username == game.author ? 2 : 1)}>
                                 <button className="btn" onClick={(e) => handleSelect(e, game.id)}>PLAY</button>
                             </td>
                             {user.username == game.author ?

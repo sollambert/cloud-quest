@@ -10,7 +10,7 @@ forbidden.code = 403;
 
 router.use('/editor', editorRouter);
 
-router.get('/', rejectUnauthenticated, (req, res) => {
+router.get('/', rejectUnauthenticated, async (req, res) => {
     const queryParams = req.query;
     const conditional = `
     ${queryParams.name ?
@@ -23,20 +23,26 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     ${conditional}
     ORDER by g.id LIMIT 10;`
 
-    pool.query(query)
-        .then((dbRes) => {
-            res.send(dbRes.rows);
-        })
-        .catch((err) => {
-            res.sendStatus(500);
-            console.error(err);
-        })
+    const connection = await pool.connect();
+    try {
+        await connection.query('BEGIN');
+        let dbRes = await connection.query(query)
+        res.send(dbRes.rows);
+        await connection.query('COMMIT');
+    } catch (error) {
+        await connection.query('ROLLBACK');
+        console.log(`Transaction Error - Rolling back transfer`, error);
+        res.sendStatus(500);
+    } finally {
+        connection.release;
+        res.end();
+    }
 })
 
 /**
 * GET route for getting intial gamestate
 */
-router.get('/new/:id', rejectUnauthenticated, (req, res) => {
+router.get('/new/:id', rejectUnauthenticated, async (req, res) => {
     const gameQuery = `
         SELECT g.id, g.name, g.start_location, g.inventory from games g
         WHERE g.id = $1;`
@@ -52,46 +58,40 @@ router.get('/new/:id', rejectUnauthenticated, (req, res) => {
         JOIN games g ON g.id = r.game_id
         WHERE g.id = $1;`
 
-    pool.query(gameQuery, [req.params.id])
-        .then((gameResponse) => {
-            pool.query(roomQuery, [req.params.id])
-                .then((roomResponse) => {
-                    for (let index in roomResponse.rows) {
-                        roomResponse.rows[index].items = [];
-                    }
-                    pool.query(itemQuery, [req.params.id])
-                        .then((itemResponse) => {
-                            for (item of itemResponse.rows) {
-                                roomResponse.rows.map((room) => {
-                                    if (room.id == item.room_id) {
-                                        room.items.push(item);
-                                        return room;
-                                    }
-                                });
-                            }
-                            let gameInfo = gameResponse.rows[0]
-                            const newGameState = {
-                                game_id: gameInfo.id,
-                                location: gameInfo.start_location,
-                                inventory: gameInfo.inventory,
-                                rooms: roomResponse.rows
-                            };
-                            res.send(newGameState);
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            res.sendStatus(500);
-                        })
-                })
-                .catch((err) => {
-                    console.error(err);
-                    res.sendStatus(500);
-                })
-        })
-        .catch((err) => {
-            console.error(err);
-            res.sendStatus(500);
-        })
+    const connection = await pool.connect();
+    try {
+        await connection.query('BEGIN');
+        const gameResponse = await connection.query(gameQuery, [req.params.id])
+        const roomResponse = await connection.query(roomQuery, [req.params.id])
+        for (let index in roomResponse.rows) {
+            roomResponse.rows[index].items = [];
+        }
+        const itemResponse = await connection.query(itemQuery, [req.params.id])
+        for (item of itemResponse.rows) {
+            roomResponse.rows.map((room) => {
+                if (room.id == item.room_id) {
+                    room.items.push(item);
+                    return room;
+                }
+            });
+        }
+        let gameInfo = gameResponse.rows[0]
+        const newGameState = {
+            game_id: gameInfo.id,
+            location: gameInfo.start_location,
+            inventory: gameInfo.inventory,
+            rooms: roomResponse.rows
+        };
+        res.send(newGameState);
+        await connection.query('COMMIT');
+    } catch (error) {
+        await connection.query('ROLLBACK');
+        console.log(`Transaction Error - Rolling back transfer`, error);
+        res.sendStatus(500);
+    } finally {
+        connection.release;
+        res.end();
+    }
 });
 
 module.exports = router;

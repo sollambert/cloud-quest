@@ -51,15 +51,30 @@ function GameInfoEditor({ game, items }) {
     return (
         <>
             {/* {JSON.stringify(gameInfo)} */}
-            {gameInfo.items ?
+            {gameInfo.name && gameInfo.start_location ?
                 <>
+                <div>
+                    <button className="btn" onClick={updateGameInfo}>UPDATE GAME INFO</button>
+                </div>
                     <div>
                         <label htmlFor="game-name">Game Name:</label>
-                        <input name="game-name" type="text" value={gameInfo.name} onChange={(e) => handleGameInfoChange(e, "name")}></input>
+                        <input
+                            style={{ width: "10vw", height: "2em" }}
+                            name="game-name"
+                            type="text"
+                            value={gameInfo.name}
+                            onChange={(e) => handleGameInfoChange(e, "name")}
+                        />
                     </div>
                     <div>
                         <label htmlFor="game-start">Start Location:</label>
-                        <input name="game-start" type="text" value={gameInfo.start_location} onChange={(e) => handleGameInfoChange(e, "start_location")}></input>
+                        <input
+                            style={{ width: "10vw", height: "2em" }}
+                            name="game-start"
+                            type="text"
+                            value={gameInfo.start_location}
+                            onChange={(e) => handleGameInfoChange(e, "start_location")}
+                        />
                     </div>
                     <div>
                         <label htmlFor="game-inventory">Inventory: </label>
@@ -71,7 +86,6 @@ function GameInfoEditor({ game, items }) {
                                 </span>
                             )
                         })}
-                        <button className="btn" onClick={updateGameInfo}>UPDATE GAME INFO</button>
                     </div>
                 </>
                 : ''}

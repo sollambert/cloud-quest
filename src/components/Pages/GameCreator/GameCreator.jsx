@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import GameInfoEditor from "./GameInfoEditor/GameInfoEditor";
 import RoomEditor from "./RoomEditor/RoomEditor";
 import './GameCreator.css';
@@ -10,11 +11,17 @@ function GameCreator() {
 
     const { game_id } = useParams();
     const dispatch = useDispatch();
+    const history = useHistory();
     const game = useSelector(store => store.gameCreator);
     const [roomEditing, setRoomEditing] = useState(-1);
 
     const [rooms, setRooms] = useState(game.rooms);
     const [items, setItems] = useState(game.items);
+
+    const play = () => {
+        dispatch({ type: "SELECT_GAME", payload: game_id });
+        history.push("/home");
+    }
     
     useEffect(() => {
         dispatch({ type: "FETCH_GAME_EDIT_DETAILS", payload: game_id });
@@ -32,6 +39,7 @@ function GameCreator() {
             {roomEditing == -1 ?
                 <>
                     <GameInfoEditor game={game} items={items} />
+                    <button className="btn" onClick={play}>PLAY</button>
                     <button className="btn">NEW ROOM</button>
                     <div className="room-cards">
                         {rooms && rooms.map((room) => {

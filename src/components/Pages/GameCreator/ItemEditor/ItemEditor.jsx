@@ -1,7 +1,7 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-function ItemEditor({game_id, items}) {
+function ItemEditor({ game_id, items }) {
 
     const dispatch = useDispatch();
     const [itemInfo, setItemInfo] = useState({ name: '', description: '', room_id: '' });
@@ -15,7 +15,7 @@ function ItemEditor({game_id, items}) {
             type: "ADD_ITEM_CREATOR",
             payload: { id: game_id, name: itemInfo.name, description: itemInfo.description, room_id: itemInfo.room_id },
             callback: () => {
-                setItemInfo({ name: '', description: '', room_id: ''})
+                setItemInfo({ name: '', description: '', room_id: '' })
             }
         })
     }
@@ -26,7 +26,7 @@ function ItemEditor({game_id, items}) {
 
     return (
         <div>
-            <table style={{width: "99vw"}}>
+            <table style={{ width: "99vw" }}>
                 <thead>
                     <tr>
                         <th>Item Name</th>
@@ -66,15 +66,36 @@ function ItemEditor({game_id, items}) {
                     <tr>
                         <td>
                             <label htmlFor="item-name">Name</label>
-                            <input name="item-name" value={itemInfo.name} onChange={e => handleItemInfoChange(e, "name")} type="text" />
+                            <input
+                                name="item-name"
+                                style={{width: "10vw", height: "2em"}}
+                                value={itemInfo.name}
+                                onChange={e => handleItemInfoChange(e, "name")}
+                                type="text"
+                            />
                         </td>
                         <td>
-                            <label htmlFor="item-description">Description</label>
-                            <input name="item-description" value={itemInfo.description} onChange={e => handleItemInfoChange(e, "description")} type="text" />
+                            <div>
+                                <label htmlFor="item-description">Description</label>
+                            </div>
+                            <textarea
+                                style={{width: "50vw", height: "5vw"}}
+                                className="editor-textarea"
+                                name="item-description"
+                                value={itemInfo.description}
+                                onChange={e => handleItemInfoChange(e, "description")}
+                            />
                         </td>
                         <td>
                             <label htmlFor="item-room-id">Room-ID</label>
-                            <input name="item-room-id" value={itemInfo.room_id} onChange={e => handleItemInfoChange(e, "room_id")} type="number" />
+                            <input
+                                name="item-room-id"
+                                style={{ width: "5vw", height: "3vh" }}
+                                min={1}
+                                value={itemInfo.room_id}
+                                onChange={e => handleItemInfoChange(e, "room_id")}
+                                type="number"
+                            />
                         </td>
                         <td>
                             <button className="btn" onClick={addItem}>ADD</button>

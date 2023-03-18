@@ -64,6 +64,8 @@ function App() {
           >
             <Home />
           </ProtectedRoute>
+
+          {/* Brings user to inventory view during gameplay */}
           <ProtectedRoute
             exact
             path="/inventory"
@@ -71,6 +73,7 @@ function App() {
             <Inventory />
           </ProtectedRoute>
 
+          {/* Brings user to saves view during gameplay */}
           <ProtectedRoute
             exact
             path="/saves"
@@ -78,6 +81,7 @@ function App() {
             <Saves />
           </ProtectedRoute>
 
+          {/* Brings user to help view during gameplay */}
           <ProtectedRoute
             exact
             path="/help"
@@ -85,6 +89,8 @@ function App() {
             <Help />
           </ProtectedRoute>
 
+
+          {/* Navigates to game editor view */}
           <Route
             exact
             path="/edit/:game_id">
@@ -95,6 +101,8 @@ function App() {
             }
           </Route>
 
+          {/* Brings user to games list view if user is authenticated,
+          otherwise redirects to login page */}
           <Route
             exact
             path="/games"
@@ -111,6 +119,8 @@ function App() {
               <Redirect to="/login" />
             }
           </Route>
+
+          {/* Login page */}
           <Route
             exact
             path="/login"
@@ -125,6 +135,7 @@ function App() {
             }
           </Route>
 
+          {/* Registration page */}
           <Route
             exact
             path="/registration"

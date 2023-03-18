@@ -1,3 +1,6 @@
+/**
+ * Reducer for storing local game state, only used after player has selected a game to play
+ */
 const gameStateReducer = (state = {}, action) => {
     switch (action.type) {
         case 'SET_GAME_ID':

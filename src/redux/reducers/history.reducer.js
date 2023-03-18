@@ -1,3 +1,6 @@
+/*
+ * Stores all chat history from player navigating through games
+ */
 const historyReducer = (state = [], action) => {
     switch (action.type) {
         case 'ADD_HISTORY':

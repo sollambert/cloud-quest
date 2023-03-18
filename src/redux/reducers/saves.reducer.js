@@ -1,3 +1,6 @@
+/**
+ * Reducer for storing save information for player
+ */
 const savesReducer = (state = [], action) => {
     switch(action.type) {
         case "SET_SAVE_DATA":

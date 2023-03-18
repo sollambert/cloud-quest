@@ -61,7 +61,7 @@ function GameSelector() {
                     </div>
                 </form>
                 <div
-                style={{alignSelf: "flex-end"}}>
+                style={{alignSelf: "center"}}>
                     <button className="btn">CREATE</button>
                 </div>
             </div>

@@ -33,4 +33,4 @@ print(ascii_image)
 
 # write to a text file.
 with open("ascii_image.txt", "w") as f:
- f.write(ascii_image)
+    f.write(ascii_image)

@@ -15,3 +15,11 @@
     font-size: 6pt;
     line-height: .85em;
 }
+
+.editor-textarea {
+    margin: 5px;
+    margin-bottom: 10px;
+    background-color: #030e00;
+    color: #12ff1e;
+    font-family: 'Apple II';
+}

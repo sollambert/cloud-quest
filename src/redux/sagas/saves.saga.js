@@ -3,19 +3,6 @@ import axios from 'axios';
 
 const gameStateSelector = (state) => state.gameState;
 
-function* initializeGameState() {
-    try {
-        const gameState = yield select(gameStateSelector);
-        let response = yield axios.get(`/api/saves/new/${gameState.game_id}`);
-        yield put({ type: "SET_GAME_STATE", payload: response.data });
-        yield put({ type: "CLEAR_HISTORY" });
-        yield put({ type: "CLEAR_SAVE_DATA" });
-        yield put({ type: 'ADD_HISTORY', payload: response.data.rooms[0].description })
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 function* getSaveData() {
     try {
         const gameState = yield select(gameStateSelector);
@@ -78,7 +65,6 @@ function* deleteSave(action) {
 }
 
 function* savesSaga() {
-    yield takeLatest("INIT_GAME_STATE", initializeGameState);
     yield takeLatest("GET_SAVE_DATA", getSaveData);
     yield takeLatest("LOAD_SAVE", loadGame);
     yield takeLatest("SAVE_GAME", saveGame);

@@ -27,7 +27,7 @@ function* selectGame(action) {
 
 function* fetchGameEditDetails(action) {
     try {
-        let response = yield axios.get(`/api/games/edit/${action.payload}`);
+        let response = yield axios.get(`/api/games/editor/${action.payload}`);
         yield put({ type: 'SET_CREATOR_INFO', payload: response.data });
     } catch (error) {
         console.error(error);

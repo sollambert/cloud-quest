@@ -86,9 +86,13 @@ function App() {
           </ProtectedRoute>
 
           <Route
-          exact
-          path="/edit/:game_id">
-            <GameCreator />
+            exact
+            path="/edit/:game_id">
+            {user.id ?
+              <GameCreator />
+              :
+              <Redirect to="/login" />
+            }
           </Route>
 
           <Route
@@ -100,11 +104,11 @@ function App() {
                 {gameState.id ?
                   <Redirect to="/home" />
                   :
-                  <GameSelector/>
+                  <GameSelector />
                 }
               </>
-              : 
-              <Redirect to="/login"/>
+              :
+              <Redirect to="/login" />
             }
           </Route>
           <Route

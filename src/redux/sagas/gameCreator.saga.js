@@ -29,6 +29,26 @@ function* saveRoom(action) {
     }
 }
 
+function* addRoom(action) {
+    try {
+        yield axios.post(`/api/games/editor/room`, action.payload);
+        yield put({type: "FETCH_GAME_EDIT_DETAILS", payload: action.payload.game_id});
+        yield action.callback();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function* deleteRoom(action) {
+    try {
+        yield axios.delete(`/api/games/editor/room/${action.payload.game_id}/${action.payload.id}`);
+        yield put({type: "FETCH_GAME_EDIT_DETAILS", payload: action.payload.game_id});
+        yield action.callback();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 function* saveGameInfo(action) {
     try {
         yield axios.put(`/api/games/editor/info/${action.payload.id}`, action.payload);
@@ -42,6 +62,8 @@ function* gameCreatorSaga() {
     yield takeLatest("DELETE_ITEM_CREATOR", deleteItem);
     yield takeLatest("SAVE_GAME_INFO_CREATOR", saveGameInfo);
     yield takeLatest("SAVE_ROOM_CREATOR", saveRoom);
+    yield takeLatest("SAVE_NEW_ROOM_CREATOR", addRoom);
+    yield takeLatest("DELETE_ROOM_CREATOR", deleteRoom);
 }
 
 export default gameCreatorSaga;

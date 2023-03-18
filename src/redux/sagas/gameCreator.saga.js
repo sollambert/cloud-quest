@@ -1,6 +1,10 @@
 import { put, takeLatest, select } from "redux-saga/effects";
 import axios from "axios";
 
+/**
+ * Worker saga to add new item into DB
+ * @param {*} action redux action containing item object as payload
+ */
 function* addItem(action) {
     try {
         yield axios.post(`/api/games/editor/item/${action.payload.id}`, action.payload);
@@ -11,6 +15,10 @@ function* addItem(action) {
     }
 }
 
+/**
+ * Worker saga to delete item from DB
+ * @param {*} action redux action containing item id and associated game id
+ */
 function* deleteItem(action) {
     try {
         yield axios.delete(`/api/games/editor/item/${action.payload.game_id}/${action.payload.item_id}`);
@@ -20,6 +28,10 @@ function* deleteItem(action) {
     }
 }
 
+/**
+ * Worker saga to update item in DB
+ * @param {*} action redux action containing item id and associated game id as well as payload of information to update
+ */
 function* updateItem(action) {
     try {
         yield axios.put(`/api/games/editor/item/${action.payload.game_id}/${action.payload.id}`, action.payload);
@@ -30,6 +42,10 @@ function* updateItem(action) {
     }
 }
 
+/**
+ * Worker saga to update room in DB
+ * @param {*} action redux action containing room id as well as payload of information to update
+ */
 function* saveRoom(action) {
     try {
         yield axios.put(`/api/games/editor/room/${action.payload.id}`, action.payload);
@@ -39,6 +55,10 @@ function* saveRoom(action) {
     }
 }
 
+/**
+ * Worker saga to add new room in DB
+ * @param {*} action redux action containing payload of information for new room
+ */
 function* addRoom(action) {
     try {
         yield axios.post(`/api/games/editor/room`, action.payload);
@@ -49,6 +69,10 @@ function* addRoom(action) {
     }
 }
 
+/**
+ * Worker saga to delete room from DB
+ * @param {*} action redux action containing room id and associated game id
+ */
 function* deleteRoom(action) {
     try {
         yield axios.delete(`/api/games/editor/room/${action.payload.game_id}/${action.payload.id}`);
@@ -59,6 +83,10 @@ function* deleteRoom(action) {
     }
 }
 
+/**
+ * Worker saga to update game info in DB
+ * @param {*} action redux action containing game id as well as payload of information to update
+ */
 function* saveGameInfo(action) {
     try {
         yield axios.put(`/api/games/editor/info/${action.payload.id}`, action.payload);
@@ -67,6 +95,7 @@ function* saveGameInfo(action) {
     }
 }
 
+//watcher saga
 function* gameCreatorSaga() {
     yield takeLatest("ADD_ITEM_EDITOR", addItem);
     yield takeLatest("DELETE_ITEM_EDITOR", deleteItem);

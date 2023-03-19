@@ -42,11 +42,16 @@ function ImageParser({ roomInfo, setRoomInfo }) {
                     }
                     asciiImage += newLine + '\\n';
                 }
-                // console.log(asciiImage);
                 setRoomInfo({ ...roomInfo, image: asciiImage })
                 setImgUrl('');
             }
         }
+    }
+
+    const handleFile = (e) => {
+        const url = URL.createObjectURL(e.target.files[0]);
+        console.log(url);
+        setUrlInput(url);
     }
 
     const handleNewImage = (e) => {
@@ -65,6 +70,13 @@ function ImageParser({ roomInfo, setRoomInfo }) {
                     justifyContent: "space-between"
                 }}>
                 <div>
+                    <div>
+                        <label>IMG:</label>
+                        <input
+                            type="file"
+                            onChange={(e) => handleFile(e)}
+                        />
+                    </div>
                     <div>
                         <label>IMG URL:</label>
                         <input

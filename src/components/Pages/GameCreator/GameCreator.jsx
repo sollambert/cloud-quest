@@ -34,6 +34,11 @@ function GameCreator() {
         }
     }, [game]);
 
+    const cancelRoomEdit = () => {
+        setRoomEditing(0);
+        dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
+    }
+
     return (
         <>
             {roomEditing == 0 ?
@@ -76,7 +81,7 @@ function GameCreator() {
                     interactables: [],
                     name: '',
                 }}
-                cancel={() => setRoomEditing(0)}/>
+                cancel={() => cancelRoomEdit()}/>
                 : 
                 <RoomEditor
                 room={rooms.filter((room) => {
@@ -84,7 +89,7 @@ function GameCreator() {
                         return room;
                     }
                 })[0]}
-                cancel={() => setRoomEditing(0)}/>
+                cancel={() => cancelRoomEdit()}/>
                 }
                 </>
             }

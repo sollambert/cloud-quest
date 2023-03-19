@@ -51,6 +51,26 @@ Button
   cursor: pointer;
 }
 
+.btn_label {
+  display: inline-block;
+  font: inherit;
+  padding: 10px 20px;
+  border-style: solid;
+  border-color: #12ff1e;
+  border-width: 1px 1px 3px;
+  border-radius: 4px;
+  background-color: #030e00;
+  color: #12ff1e;
+  font-size: 1.1rem;
+  outline: 0;
+  cursor: pointer;
+}
+
+.btn_label:hover {
+  background-color: #0e4000;
+  text-decoration: none;
+}
+
 .btn_sizeMin {
   min-height: 50px;
   min-width: 100px;

@@ -18,7 +18,7 @@ function ItemEditor({ game_id, items }) {
     }
 
     const handleEdit = (item) => {
-        setEditInfo({...item});
+        setEditInfo({ ...item });
         setEditingId(item.id);
     }
 
@@ -62,11 +62,11 @@ function ItemEditor({ game_id, items }) {
                 </thead>
                 <tbody>
 
-                    {items && items.map((item) => {
+                    {items && items.map((item, i) => {
                         return (
-                            <>
+                            <tr key={i}>
                                 {editingId == item.id ?
-                                    <tr key={item.id}>
+                                    <>
                                         <td>
                                             <label htmlFor="item-name">Name</label>
                                             <input
@@ -114,9 +114,9 @@ function ItemEditor({ game_id, items }) {
                                                 CANCEL
                                             </button>
                                         </td>
-                                    </tr>
+                                    </>
                                     :
-                                    <tr key={item.id}>
+                                    <>
                                         <td>
                                             {item.name}
                                         </td>
@@ -131,18 +131,22 @@ function ItemEditor({ game_id, items }) {
                                         </td>
                                         <td>
                                             <button
+                                                style={{ width: "100%" }}
                                                 className="btn"
                                                 onClick={() => handleEdit(item)}
                                             >
                                                 EDIT
                                             </button>
-                                            <button className="btn" onClick={e => deleteItem(item.id)}>
+                                            <button
+                                                style={{ width: "100%" }}
+                                                className="btn"
+                                                onClick={e => deleteItem(item.id)}>
                                                 DELETE
                                             </button>
                                         </td>
-                                    </tr>
+                                    </>
                                 }
-                            </>
+                            </tr>
                         );
                     })}
                     <tr>

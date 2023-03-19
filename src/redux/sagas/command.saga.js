@@ -29,7 +29,7 @@ function* parseCommand(message) {
         (element) => {
             if (!ignored.includes(element)) { return element }
         });
-    let response = {messages: []};
+    let response = { messages: [] };
     let interactables = room.interactables;
     switch (split[0]) {
         case 'go':
@@ -85,19 +85,17 @@ function* parseCommand(message) {
                 if (split[3]) {
                     split[2] = `${split[2]} ${split[3]}`;
                 }
-                for (let item of gameState.inventory) {
-                    if (item.name == split[1]) {
+                for (let item of gameState.items) {
+                    if (item.name == split[1] && gameState.inventory.includes(item.id)) {
                         for (let interactable of interactables) {
                             if (interactable.name.includes(split[2])) {
-                                if (interactable.use?.[item.name]) {
-                                    if (interactable.name.includes(split[2])) {
-                                        response.messages.push(`You use the ${split[1]} on the ${split[2]}.`)
-                                        response = useItem(item, room, response);
-                                        return response;
-                                    }
-                                    response.messages.push(`You don't know how to use the ${split[1]} on the ${split[2]}.`);
+                                if (interactable.use?.[item.id]) {
+                                    response.messages.push(`You use the ${split[1]} on the ${split[2]}.`)
+                                    response = useItem(item, room, response);
                                     return response;
                                 }
+                                response.messages.push(`You don't know how to use the ${split[1]} on the ${split[2]}.`);
+                                return response;
                             }
                         }
                         response.messages.push(`There isn't a ${split[2]} here.`)
@@ -141,6 +139,9 @@ function* parseCommand(message) {
             if (!split[1]) {
                 response.messages.push(`Take what?`)
                 return response;
+            }
+            if (split[2]) {
+                split[1] = `${split[1]} ${split[2]}`;
             }
             for (let item of room.items) {
                 if (item.name == (split[1])) {
@@ -217,7 +218,14 @@ function handleMove(interactIndex, room, response) {
                 response.messages.push(interactable.move.message);
             }
             if (interactable.move?.shows_item) {
-                gameState.rooms[roomIndex].items = [...interactable.move.shows_item.items, ...room.items]
+                let items = gameState.items.filter((item) => {
+                    if (interactable.move?.shows_item.items.includes(`${item.id}`)) {
+                        console.log(item);
+                        return item;
+                    }
+                })
+                gameState.rooms[roomIndex].items = [...items, ...room.items]
+                // gameState.rooms[roomIndex].items = [...interactable.move.shows_item.items, ...room.items]
                 response.messages.push(interactable.move.shows_item.message);
                 if (interactable.move.shows_item.new_description) {
                     gameState.rooms[roomIndex].interactables[interactIndex].description = interactable.move.shows_item.new_description;
@@ -238,8 +246,8 @@ function useItem(item, room, response) {
     }
     for (let index in room.interactables) {
         let interactable = room.interactables[index];
-        if (interactable?.use?.[item.name]) {
-            const interactionItem = interactable.use[item.name];
+        if (interactable?.use?.[item.id]) {
+            const interactionItem = interactable.use[item.id];
             if (interactionItem.condition) {
                 let conditionsMet = true;
                 for (let condition of interactionItem.condition) {
@@ -269,8 +277,8 @@ function useItem(item, room, response) {
     }
 
     if (removeItem) {
-        gameState.inventory = gameState.inventory.filter((invItem) => {
-            if (invItem.name != item.name) {
+        gameState.inventory = gameState.inventory.filter((invId) => {
+            if (invId != item.id) {
                 return invItem
             };
         })
@@ -286,7 +294,13 @@ function handleOpen(interactIndex, room, response) {
     for (let roomIndex in gameState.rooms) {
         if (gameState.rooms[roomIndex].name == room.name) {
             if (interactable.open?.shows_item) {
-                gameState.rooms[roomIndex].items = [...interactable.open?.shows_item.items, ...room.items]
+                let items = gameState.items.filter((item) => {
+                    if (interactable.open?.shows_item.items.includes(`${item.id}`)) {
+                        console.log(item);
+                        return item;
+                    }
+                })
+                gameState.rooms[roomIndex].items = [...items, ...room.items]
                 response.messages.push(interactable.open.shows_item.message);
                 if (interactable.open.shows_item.new_description) {
                     gameState.rooms[roomIndex].interactables[interactIndex].description = interactable.open.shows_item.new_description;
@@ -321,7 +335,7 @@ function takeItem(item, room, response) {
             gameState.rooms[index] = room;
         }
     }
-    gameState.inventory.push(item);
+    gameState.inventory.push(item.id);
     response.callback = () => {
         put({ type: 'SET_GAME_STATE', payload: gameState })
     };

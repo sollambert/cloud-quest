@@ -49,6 +49,7 @@ function* updateItem(action) {
 function* saveRoom(action) {
     try {
         yield axios.put(`/api/games/editor/room/${action.payload.id}`, action.payload);
+        yield put({ type: 'EDITOR_NOTIFICATION', payload: "Room contents saved."});
         yield put({type: "FETCH_GAME_EDIT_DETAILS", payload: action.payload.game_id});
     } catch (error) {
         console.error(error);

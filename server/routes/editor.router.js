@@ -38,7 +38,7 @@ router.post('/create', rejectUnauthenticated, async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 
@@ -102,7 +102,7 @@ router.get('/:id', rejectUnauthenticated, async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -135,7 +135,7 @@ router.put('/info/:game_id', rejectUnauthenticated, async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -185,7 +185,7 @@ router.post('/item/:game_id', rejectUnauthenticated, async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -215,6 +215,10 @@ router.put('/item/:game_id/:item_id', async (req, res) => {
     SET room_id = $1, item_id = $2
     WHERE id = $3;`
 
+    const deleteRIQuery = `
+    DELETE FROM rooms_items
+    WHERE item_id = $1;`
+
     const connection = await pool.connect();
     try {
         await connection.query('BEGIN')
@@ -239,6 +243,11 @@ router.put('/item/:game_id/:item_id', async (req, res) => {
                         riResult.rows[0].id
                     ])
             }
+        } else {
+            const riResult = await connection.query(checkRoomsItemsQuery, [req.params.item_id])
+            if (riResult.rows.length != 0) {
+                await connection.query(deleteRIQuery, [req.params.item_id]);
+            }
         }
         await connection.query('COMMIT');
         res.sendStatus(203);
@@ -251,7 +260,7 @@ router.put('/item/:game_id/:item_id', async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -286,7 +295,7 @@ router.delete('/item/:game_id/:item_id', async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -325,7 +334,7 @@ router.post('/room', async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -366,7 +375,7 @@ router.put('/room/:roomId', async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -401,7 +410,7 @@ router.delete('/room/:game_id/:room_id', async (req, res) => {
             res.sendStatus(500);
         }
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })

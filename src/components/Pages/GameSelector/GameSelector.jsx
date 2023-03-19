@@ -26,7 +26,8 @@ function GameSelector() {
         history.push("/home");
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
         dispatch({ type: "FETCH_GAMES", payload: { name: searchBuffer.name, author: searchBuffer.author }, callback: clearInput })
     }
 

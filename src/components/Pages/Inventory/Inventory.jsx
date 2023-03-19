@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 function Inventory() {
 
+    const items = useSelector(store => store.gameState.items);
     const inventory = useSelector(store => store.gameState.inventory);
 
     return (
@@ -15,15 +16,17 @@ function Inventory() {
                         : <>
                             <table>
                                 <tbody>
-                                    {inventory.map((item, i) => {
-                                        return (<tr key={i}>
-                                            <td>
-                                                {item.name}
-                                            </td>
-                                            <td>
-                                                {item.description}
-                                            </td>
-                                        </tr>)
+                                    {items.map((item, i) => {
+                                        if (inventory.includes(item.id)) {
+                                            return (<tr key={i}>
+                                                <td>
+                                                    {item.name}
+                                                </td>
+                                                <td>
+                                                    {item.description}
+                                                </td>
+                                            </tr>)
+                                        }
                                     })}
                                 </tbody>
                             </table> </>

@@ -46,13 +46,17 @@ router.get('/new/:id', rejectUnauthenticated, async (req, res) => {
     const gQuery = `
         SELECT g.id, g.name, g.start_location, g.inventory from games g
         WHERE g.id = $1;`
+    const iQuery = `
+        SELECT i.* from items i
+        JOIN games g on g.id = i.game_id
+        WHERE g.id = $1;`
     const rQuery = `
         SELECT r.* FROM rooms r
         JOIN games g ON g.id = r.game_id
         WHERE g.id = $1
         ORDER BY r.id;`
     const riQuery = `
-        SELECT i.name, i.description, ri.room_id, r.id FROM items i
+        SELECT i.name, i.description, ri.room_id, i.id FROM items i
         JOIN rooms_items ri ON i.id = ri.item_id
         JOIN rooms r ON r.id = ri.room_id
         JOIN games g ON g.id = r.game_id
@@ -62,6 +66,7 @@ router.get('/new/:id', rejectUnauthenticated, async (req, res) => {
     try {
         await connection.query('BEGIN');
         const gameResponse = await connection.query(gQuery, [req.params.id])
+        const itemResponse = await connection.query(iQuery, [req.params.id]);
         const roomResponse = await connection.query(rQuery, [req.params.id])
         for (let index in roomResponse.rows) {
             roomResponse.rows[index].items = [];
@@ -80,6 +85,7 @@ router.get('/new/:id', rejectUnauthenticated, async (req, res) => {
             game_id: gameInfo.id,
             location: gameInfo.start_location,
             inventory: gameInfo.inventory,
+            items: itemResponse.rows,
             rooms: roomResponse.rows
         };
         res.send(newGameState);

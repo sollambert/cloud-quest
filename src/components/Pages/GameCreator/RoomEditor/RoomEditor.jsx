@@ -58,7 +58,6 @@ function RoomEditor({ room, cancel }) {
                     exits
                 }, callback: cancel
             });
-            dispatch({ type: 'EDITOR_NOTIFICATION', payload: "Room contents saved."});
         } catch (error) {
             dispatch({ type: 'EDITOR_NOTIFICATION', payload: error.message});
             // console.error(error);

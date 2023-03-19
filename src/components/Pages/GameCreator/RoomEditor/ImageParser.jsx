@@ -71,13 +71,6 @@ function ImageParser({ roomInfo, setRoomInfo }) {
                 }}>
                 <div>
                     <div>
-                        <label>IMG:</label>
-                        <input
-                            type="file"
-                            onChange={(e) => handleFile(e)}
-                        />
-                    </div>
-                    <div>
                         <label>IMG URL:</label>
                         <input
                             type="text"
@@ -96,10 +89,25 @@ function ImageParser({ roomInfo, setRoomInfo }) {
                             onChange={(e) => setWidth(e.target.value)}
                         />
                     </div>
-                    <div>
+                    <div
+                    style={{display: "flex", flexDirection: "row"}}
+                    >
+                        <div>
+                            <label className="btn_label">
+                                IMG UPLOAD
+                                <input
+                                    style={{ display: "none" }}
+                                    type="file"
+                                    onChange={(e) => handleFile(e)}
+                                />
+                            </label>
+                        </div>
                         <button
                             className="btn"
-                            onClick={handleNewImage}>SET IMAGE</button>
+                            onClick={handleNewImage}
+                        >
+                            SET IMAGE
+                        </button>
                     </div>
                 </div>
                 {roomInfo.image != '' ?

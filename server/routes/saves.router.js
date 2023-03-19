@@ -19,7 +19,7 @@ router.get('/load/:game_id/:id', rejectUnauthenticated, async (req, res) => {
     try {
         await connection.query('BEGIN');
         let dbRes = await connection.query(query, [req.user.id, req.params.id, req.params.game_id])
-        res.send(dbRes.rows);
+        res.send(dbRes.rows[0]);
         await connection.query('COMMIT');
     } catch (error) {
         await connection.query('ROLLBACK');
@@ -44,6 +44,7 @@ router.get('/data/:game_id', rejectUnauthenticated, async (req, res) => {
     try {
       await connection.query('BEGIN');
       let dbRes = await connection.query(roomQuery, [req.user.id, req.params.game_id])
+      // console.log(dbRes.rows)
       res.send(dbRes.rows);
       await connection.query('COMMIT');
     } catch (error) {

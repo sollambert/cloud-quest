@@ -49,7 +49,7 @@ function* updateItem(action) {
 function* saveRoom(action) {
     try {
         yield axios.put(`/api/games/editor/room/${action.payload.id}`, action.payload);
-        yield put({ type: 'EDITOR_NOTIFICATION', payload: "Room contents saved."});
+        yield action.callback();
         yield put({type: "FETCH_GAME_EDIT_DETAILS", payload: action.payload.game_id});
     } catch (error) {
         console.error(error);
@@ -88,9 +88,23 @@ function* deleteRoom(action) {
  * Worker saga to update game info in DB
  * @param {*} action redux action containing game id as well as payload of information to update
  */
+function* newGame(action) {
+    try {
+        const response = yield axios.post(`/api/games/editor/create`, action.payload);
+        yield action.callback(response.data.id);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+/**
+ * Worker saga to update game info in DB
+ * @param {*} action redux action containing game id as well as payload of information to update
+ */
 function* saveGameInfo(action) {
     try {
         yield axios.put(`/api/games/editor/info/${action.payload.id}`, action.payload);
+        yield action.callback();
     } catch (error) {
         console.error(error);
     }
@@ -101,6 +115,7 @@ function* gameCreatorSaga() {
     yield takeLatest("ADD_ITEM_EDITOR", addItem);
     yield takeLatest("DELETE_ITEM_EDITOR", deleteItem);
     yield takeLatest("UPDATE_ITEM_EDITOR", updateItem);
+    yield takeLatest("NEW_GAME_EDITOR", newGame);
     yield takeLatest("SAVE_GAME_INFO_EDITOR", saveGameInfo);
     yield takeLatest("SAVE_ROOM_EDITOR", saveRoom);
     yield takeLatest("SAVE_NEW_ROOM_EDITOR", addRoom);

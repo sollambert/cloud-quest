@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import GameInfoEditor from "./GameInfoEditor/GameInfoEditor";
 import RoomEditor from "./RoomEditor/RoomEditor";
-import './GameCreator.css';
+import './Editor.css';
 import ItemEditor from "./ItemEditor/ItemEditor";
 
 function GameCreator() {
@@ -14,6 +14,7 @@ function GameCreator() {
     const history = useHistory();
     const game = useSelector(store => store.gameCreator);
     const [roomEditing, setRoomEditing] = useState(0);
+    const errors = useSelector(store => store.errors);
 
     const [rooms, setRooms] = useState(game.rooms);
     const [items, setItems] = useState(game.items);
@@ -24,7 +25,12 @@ function GameCreator() {
     }
     
     useEffect(() => {
-        dispatch({ type: "FETCH_GAME_EDIT_DETAILS", payload: game_id });
+            dispatch({ type: "FETCH_GAME_EDIT_DETAILS", payload: game_id });
+            window.addEventListener('keydown', handleKeyDown);
+
+            return () => {
+                window.removeEventListener('keydown', handleKeyDown);
+            }
     }, []);
 
     useEffect(() => {
@@ -39,11 +45,22 @@ function GameCreator() {
         dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
     }
 
+    const handleKeyDown = (e) => {
+        if (errors.editorMessage) {
+            dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
+        }
+    }
+
     return (
-        <>
+        <div onKeyDown={handleKeyDown}>
             {roomEditing == 0 ?
                 <>
                     <GameInfoEditor game={game} items={items} />
+            {errors.editorMessage && (
+                <h3 className="alert" role="alert">
+                    {errors.editorMessage}
+                </h3>
+            )}
                     <button className="btn" onClick={play}>PLAY</button>
                     <button className="btn" onClick={() => setRoomEditing(-1)}>NEW ROOM</button>
                     <div className="room-cards">
@@ -93,7 +110,7 @@ function GameCreator() {
                 }
                 </>
             }
-        </>
+        </div>
     )
 }
 

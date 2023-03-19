@@ -21,7 +21,8 @@ import Help from '../Pages/Help/Help';
 import Saves from '../Pages/Saves/Saves';
 import Inventory from '../Pages/Inventory/Inventory';
 import GameSelector from '../Pages/GameSelector/GameSelector';
-import GameCreator from '../Pages/GameCreator/GameCreator';
+import Creator from '../Pages/GameCreator/Creator';
+import Editor from '../Pages/GameCreator/Editor';
 
 import './App.css';
 
@@ -90,12 +91,23 @@ function App() {
           </ProtectedRoute>
 
 
+          {/* Navigates to new game editor view */}
+          <Route
+            exact
+            path="/create">
+            {user.id ?
+              <Creator />
+              :
+              <Redirect to="/login" />
+            }
+          </Route>
+
           {/* Navigates to game editor view */}
           <Route
             exact
             path="/edit/:game_id">
             {user.id ?
-              <GameCreator />
+              <Editor />
               :
               <Redirect to="/login" />
             }

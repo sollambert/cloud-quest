@@ -21,6 +21,7 @@ function GameInfoEditor({ game, items }) {
     }, [game]);
 
     const handleGameInfoChange = (e, key, index) => {
+        dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
         if (key == "inventory") {
             if (e.target.checked) {
                 let checks = itemChecks;
@@ -44,14 +45,24 @@ function GameInfoEditor({ game, items }) {
         }
     }
 
+    const handleKeyDown = (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key == 's') {
+            e.preventDefault();
+            updateGameInfo();
+        }
+    }
+
     const updateGameInfo = () => {
-        dispatch({ type: "SAVE_GAME_INFO_EDITOR", payload: gameInfo });
+        dispatch({ type: "SAVE_GAME_INFO_EDITOR", payload: gameInfo,
+            callback: () => {
+        dispatch({ type: 'EDITOR_NOTIFICATION', payload: "Game info saved."});
+    }});
     }
 
     return (
-        <>
+        <div onKeyDown={handleKeyDown}>
             {/* {JSON.stringify(gameInfo)} */}
-            {gameInfo.name && gameInfo.start_location ?
+            {gameInfo.name != undefined && gameInfo.start_location != undefined ?
                 <>
                 <div>
                     <button className="btn" onClick={updateGameInfo}>UPDATE GAME INFO</button>
@@ -89,7 +100,7 @@ function GameInfoEditor({ game, items }) {
                     </div>
                 </>
                 : ''}
-        </>
+        </div>
     )
 }
 

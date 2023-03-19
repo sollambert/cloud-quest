@@ -17,6 +17,33 @@ SELECT * FROM games g
 JOIN rooms r ON r.game_id = g.id
 WHERE g.id = $1 AND r.game_id = $1 AND r.id = $2 AND g.user_id = $3;`;
 
+router.post('/create', rejectUnauthenticated, async (req, res) => {
+
+    const newGame = `INSERT INTO games ("name", "start_location","user_id","inventory")
+        VALUES ('new-game', '', $1, '[]')
+        RETURNING id;`
+
+    const connection = await pool.connect();
+    try {
+        await connection.query('BEGIN');
+        const gRes = await connection.query(newGame, [req.user.id]);
+        await connection.query('COMMIT');
+        res.send(gRes.rows[0]);
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
+            res.sendStatus(500);
+        }
+    } finally {
+        connection.release;
+        res.end();
+    }
+
+})
+
 router.get('/:id', rejectUnauthenticated, async (req, res) => {
 
     const gameQuery = `
@@ -42,12 +69,12 @@ router.get('/:id', rejectUnauthenticated, async (req, res) => {
     WHERE g.id = $1 AND g.user_id = $2
     ORDER BY i.id;`
 
-    let gameObject = {}
-
     const connection = await pool.connect();
 
     try {
         await connection.query('BEGIN');
+
+        let gameObject = {}
         const gameRes = await connection.query(gameQuery, [req.params.id, req.user.id])
         gameObject.gameInfo = gameRes.rows[0];
         const roomRes = await connection.query(roomQuery, [req.params.id, req.user.id])
@@ -85,8 +112,8 @@ router.put('/info/:game_id', rejectUnauthenticated, async (req, res) => {
     const updateQuery = `
     UPDATE games
     SET name = $1, start_location = $2, inventory = $3
-    WHERE user_id = $4;`
-    
+    WHERE user_id = $4 AND id = $5;`
+
     const connection = await pool.connect();
 
     try {
@@ -95,7 +122,7 @@ router.put('/info/:game_id', rejectUnauthenticated, async (req, res) => {
         if (ownership.rows == 0) {
             throw forbidden;
         } else {
-            await connection.query(updateQuery, [req.body.name, req.body.start_location, `[${req.body.inventory}]`, req.user.id]);
+            await connection.query(updateQuery, [req.body.name, req.body.start_location, `[${req.body.inventory}]`, req.user.id, req.params.game_id]);
         }
         await connection.query('COMMIT');
         res.sendStatus(201);
@@ -127,13 +154,13 @@ router.post('/item/:game_id', rejectUnauthenticated, async (req, res) => {
 
     try {
         await connection.query('BEGIN');
-        const ownerRes = await connection.query(ownershipQuery, 
+        const ownerRes = await connection.query(ownershipQuery,
             [req.params.game_id, req.user.id])
         if (ownerRes.rows.length == 0) {
             throw forbidden;
         }
         if (req.body.room_id) {
-            let roomOwnerRes = await connection.query(roomOwnershipQuery, 
+            let roomOwnerRes = await connection.query(roomOwnershipQuery,
                 [req.params.game_id, req.body.room_id, req.user.id]);
             if (roomOwnerRes.rows.length == 0) {
                 throw forbidden;
@@ -144,7 +171,7 @@ router.post('/item/:game_id', rejectUnauthenticated, async (req, res) => {
                 await connection.query(roomsItemsQuery, [req.body.room_id, newId]);
             }
         } else {
-            await connection.query(itemQuery, 
+            await connection.query(itemQuery,
                 [req.params.game_id, req.body.name, req.body.description]);
         }
         await connection.query('COMMIT');
@@ -193,13 +220,13 @@ router.put('/item/:game_id/:item_id', async (req, res) => {
         await connection.query('BEGIN')
         const ownership = await connection.query(ownershipQuery, [req.params.game_id, req.params.item_id, req.user.id]);
         if (ownership.rows.length == 0) {
-            throw(forbidden);
+            throw (forbidden);
         }
         await connection.query(updateQuery, [req.body.name, req.body.description, req.params.item_id])
         if (req.body.room_id) {
             const roomOwnership = await connection.query(roomOwnershipQuery, [req.params.game_id, req.body.room_id, req.user.id]);
             if (roomOwnership.rows.length == 0) {
-                throw(forbidden);
+                throw (forbidden);
             }
             const riResult = await connection.query(checkRoomsItemsQuery, [req.params.item_id])
             if (riResult.rows.length == 0) {
@@ -245,7 +272,7 @@ router.delete('/item/:game_id/:item_id', async (req, res) => {
         await connection.query('BEGIN')
         const ownership = await connection.query(ownershipQuery, [req.params.game_id, req.params.item_id, req.user.id]);
         if (ownership.rows.length == 0) {
-            throw(forbidden);
+            throw (forbidden);
         }
         await connection.query(deleteQuery, [req.params.item_id])
         await connection.query('COMMIT');
@@ -273,7 +300,7 @@ router.post('/room', async (req, res) => {
     try {
         await connection.query('BEGIN');
         const ownership = await connection.query(ownershipQuery, [req.body.game_id, req.user.id]);
-        
+
         if (ownership.rows.length == 0) {
             throw forbidden;
         } else {
@@ -308,7 +335,7 @@ router.put('/room/:roomId', async (req, res) => {
     UPDATE rooms
     SET game_id = $1, name = $2, image = $3, description = $4, exits = $5, interactables = $6
     WHERE id = $7;`;
-    
+
     const connection = await pool.connect();
     try {
         await connection.query('BEGIN');
@@ -360,7 +387,7 @@ router.delete('/room/:game_id/:room_id', async (req, res) => {
         await connection.query('BEGIN')
         const ownership = await connection.query(ownershipQuery, [req.params.game_id, req.params.room_id, req.user.id]);
         if (ownership.rows.length == 0) {
-            throw(forbidden);
+            throw (forbidden);
         }
         await connection.query(deleteQuery, [req.params.room_id])
         await connection.query('COMMIT');

@@ -34,6 +34,11 @@ function GameSelector() {
         setSearchBuffer({ ...searchBuffer, [key]: e.target.value });
     }
 
+    const handleCreate = (id) => {
+        dispatch({ type: "CLEAR_GAME_STATE" });
+        history.push(`/create`);
+    }
+
     const handleEdit = (id) => {
         dispatch({ type: "CLEAR_GAME_STATE" });
         history.push(`/edit/${id}`);
@@ -62,7 +67,7 @@ function GameSelector() {
                 </form>
                 <div
                 style={{alignSelf: "center"}}>
-                    <button className="btn">CREATE</button>
+                    <button className="btn" onClick={() => handleCreate("new")}>CREATE</button>
                 </div>
             </div>
             <table>

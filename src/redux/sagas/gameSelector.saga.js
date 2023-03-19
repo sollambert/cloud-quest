@@ -3,6 +3,11 @@ import axios from 'axios';
 
 const gameStateSelector = (state) => state.gameState;
 
+
+/**
+ * Worker saga to fetching info for game selector
+ * @param {*} action redux action containing search terms
+ */
 function* fetchGames(action) {
     try {
         // console.log(action.payload);
@@ -14,6 +19,10 @@ function* fetchGames(action) {
     }
 }
 
+/**
+ * Worker saga to select game and initialize game state
+ * @param {*} action redux action containing game id as payload
+ */
 function* selectGame(action) {
     try {
         const gameState = yield select(gameStateSelector);
@@ -25,6 +34,10 @@ function* selectGame(action) {
     }
 }
 
+/**
+ * Worker saga to fetch game info for editor
+ * @param {*} action redux action containing game id
+ */
 function* fetchGameEditDetails(action) {
     try {
         let response = yield axios.get(`/api/games/editor/${action.payload}`);
@@ -34,6 +47,7 @@ function* fetchGameEditDetails(action) {
     }
 }
 
+//watcher saga
 function* watcherSaga() {
     yield takeEvery("FETCH_GAMES", fetchGames);
     yield takeEvery("SELECT_GAME", selectGame);

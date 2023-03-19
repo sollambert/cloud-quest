@@ -35,6 +35,8 @@ app.use(express.static('build'));
 const PORT = process.env.PORT || 5000;
 
 /** Listen * */
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
+server.keepAliveTimeout = 30000;
+server.headersTimeout = 31000;

@@ -122,7 +122,7 @@ VALUES('car',
 		"display_name": "front door",
 		"description": "The front door to your old house. Looks like it''s locked.",
 		"use": {
-			"key": {
+			"4": {
 				"effect": {
 					"house_unlocked": true,
 					"new_description": "The front door to your old house. It''s been unlocked.",
@@ -139,12 +139,7 @@ VALUES('car',
 		"move": {
 			"shows_item":
 			{
-				"items": [
-					{
-						"name": "key",
-						"description": "Maybe this will get me in the front door."
-					}
-				],
+				"items": ["62"],
 				"message": "And find a key under it!",
 				"new_description": "Printed on the mat is a large WELCOME in fading letters. You''ve already found the secret spare key."
 			}
@@ -162,7 +157,7 @@ VALUES('car',
 		"display_name": "generator",
 		"description": "The generator is old. Upon further investigation there seems to be some gas already in there but it won''t turn on. Looks like a rodent did some damage to the wiring.",
 		"use": {
-			"wires": {
+			"1": {
 				"effect": {
 					"generator": true,
 					"new_description": "After replacing the wiring, the generator is humming with life."
@@ -190,12 +185,7 @@ VALUES('car',
 		"open": {
 			"shows_item":
 			{
-				"items": [
-					{
-						"name": "fuse",
-						"description": "This fuse looks like it could be useful for getting the power back on."
-					}
-				],
+				"items": ["5"],
 				"message": "There''s one lonely fuse sitting inside the box." 
 			}
 		}
@@ -222,7 +212,7 @@ VALUES('car',
 			{
 				"use":
 				{
-					"fuse":
+					"5":
 					{
 						"effect":
 						{
@@ -243,7 +233,7 @@ VALUES('car',
 		"description": "I''m not worried about that kind of web! I have a calculator to save.",
 		"use":
 		{
-			"donut":
+			"3":
 			{
 				"effect":
 				{
@@ -266,9 +256,12 @@ VALUES('car',
 		"description": "There''s a computer sitting on the desk. Luckily you still remember the pin to access it. It''s 1077, the price of a cheese pizza and a soda at your old job, Panucci''s pizza.",
 		"use":
 		{
-			"calculator":
+			"2":
 			{
-				"condition": ["generator", "electricity"],
+				"condition": {
+					"generator": true,
+					"electricity": true
+				},
 				"condition_message": "Looks like there''s no power. I must be missing something.",
 				"effect":
 				{
@@ -298,7 +291,13 @@ VALUES('wires',
 'A basic calculator! This should do the trick, just have to get this uploaded to the cloud.'),
 ('donut',
 1,
-'A beautifully crafted and somehow still fresh donut covered in sprinkles. Looks like it''s got raspberry filling.');
+'A beautifully crafted and somehow still fresh donut covered in sprinkles. Looks like it''s got raspberry filling.'),
+('key',
+1,
+'Maybe this will get me in the front door.'),
+('fuse',
+1,
+'This fuse looks like it could be useful for getting the power back on.');
 
 -- relational keys for putting items into rooms
 insert into rooms_items (room_id, item_id)

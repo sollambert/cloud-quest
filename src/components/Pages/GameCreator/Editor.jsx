@@ -23,14 +23,14 @@ function GameCreator() {
         dispatch({ type: "SELECT_GAME", payload: game_id });
         history.push("/home");
     }
-    
-    useEffect(() => {
-            dispatch({ type: "FETCH_GAME_EDIT_DETAILS", payload: game_id });
-            window.addEventListener('keydown', handleKeyDown);
 
-            return () => {
-                window.removeEventListener('keydown', handleKeyDown);
-            }
+    useEffect(() => {
+        dispatch({ type: "FETCH_GAME_EDIT_DETAILS", payload: game_id });
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        }
     }, []);
 
     useEffect(() => {
@@ -42,12 +42,12 @@ function GameCreator() {
 
     const cancelRoomEdit = () => {
         setRoomEditing(0);
-        dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
+        dispatch({ type: "CLEAR_EDITOR_NOTIFICATION" });
     }
 
     const handleKeyDown = (e) => {
         if (errors.editorMessage) {
-            dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
+            dispatch({ type: "CLEAR_EDITOR_NOTIFICATION" });
         }
     }
 
@@ -56,18 +56,18 @@ function GameCreator() {
             {roomEditing == 0 ?
                 <>
                     <GameInfoEditor game={game} items={items} />
-            {errors.editorMessage && (
-                <h3 className="alert" role="alert">
-                    {errors.editorMessage}
-                </h3>
-            )}
+                    {errors.editorMessage && (
+                        <h3 className="alert" role="alert">
+                            {errors.editorMessage}
+                        </h3>
+                    )}
                     <button className="btn" onClick={play}>PLAY</button>
                     <button className="btn" onClick={() => setRoomEditing(-1)}>NEW ROOM</button>
                     <div className="room-cards">
                         {rooms && rooms.map((room) => {
                             return (
                                 <div key={room.id} className={"room-container"} onClick={() => setRoomEditing(room.id)}>
-                                    ID: {room.id} 
+                                    ID: {room.id}
                                     <div className="room-container-image">
                                         {room.image.split('\\n').map((newLine, i) => {
                                             return (
@@ -88,26 +88,26 @@ function GameCreator() {
                 </>
                 :
                 <>
-                {roomEditing == -1 ?
-                <RoomEditor room={{
-                    game_id,
-                    id: -1,
-                    description: '',
-                    exits: [],
-                    image: '',
-                    interactables: [],
-                    name: '',
-                }}
-                cancel={() => cancelRoomEdit()}/>
-                : 
-                <RoomEditor
-                room={rooms.filter((room) => {
-                    if (room.id == roomEditing) {
-                        return room;
+                    {roomEditing == -1 ?
+                        <RoomEditor room={{
+                            game_id,
+                            id: -1,
+                            description: '',
+                            exits: [],
+                            image: '',
+                            interactables: [],
+                            name: '',
+                        }}
+                            cancel={() => cancelRoomEdit()} />
+                        :
+                        <RoomEditor
+                            room={rooms.filter((room) => {
+                                if (room.id == roomEditing) {
+                                    return room;
+                                }
+                            })[0]}
+                            cancel={() => cancelRoomEdit()} />
                     }
-                })[0]}
-                cancel={() => cancelRoomEdit()}/>
-                }
                 </>
             }
         </div>

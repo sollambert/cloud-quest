@@ -22,7 +22,7 @@ function RoomEditor({ room, cancel }) {
             setRoomInfo({
                 ...room,
                 exits: JSON.stringify(room.exits),
-                interactables: JSON.stringify(room.interactables, null, 4)
+                interactables: JSON.stringify(room.interactables, null, 2)
             });
         // }
     }, [room]);

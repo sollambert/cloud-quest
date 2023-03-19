@@ -34,7 +34,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         console.log(`Transaction Error - Rolling back transfer`, error);
         res.sendStatus(500);
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 })
@@ -95,7 +95,7 @@ router.get('/new/:id', rejectUnauthenticated, async (req, res) => {
         console.log(`Transaction Error - Rolling back transfer`, error);
         res.sendStatus(500);
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 });

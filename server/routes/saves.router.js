@@ -26,7 +26,7 @@ router.get('/load/:game_id/:id', rejectUnauthenticated, async (req, res) => {
         console.log(`Transaction Error - Rolling back transfer`, error);
         res.sendStatus(500);
     } finally {
-        connection.release;
+        connection.release();
         res.end();
     }
 });
@@ -52,7 +52,7 @@ router.get('/data/:game_id', rejectUnauthenticated, async (req, res) => {
       console.log(`Transaction Error - Rolling back transfer`, error);
       res.sendStatus(500);
     } finally {
-      connection.release;
+      connection.release();
       res.end();
     }
 });
@@ -80,7 +80,7 @@ router.post('/:game_id', rejectUnauthenticated, async (req, res) => {
     console.log(`Transaction Error - Rolling back transfer`, error);
     res.sendStatus(500);
   } finally {
-    connection.release;
+    connection.release();
     res.end();
   }
 });
@@ -109,7 +109,7 @@ router.put('/:game_id/:id', rejectUnauthenticated, async (req, res) => {
     console.log(`Transaction Error - Rolling back transfer`, error);
     res.sendStatus(500);
   } finally {
-    connection.release;
+    connection.release();
     res.end();
   }
 });
@@ -134,7 +134,7 @@ router.delete('/:game_id/:id', rejectUnauthenticated, async (req, res) => {
     console.log(`Transaction Error - Rolling back transfer`, error);
     res.sendStatus(500);
   } finally {
-    connection.release;
+    connection.release();
     res.end();
   }
 })

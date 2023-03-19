@@ -34,9 +34,9 @@ const registrationMessage = (state = '', action) => {
 
 const editorMessage = (state = '', action) => {
   switch (action.type) {
-    case 'JSON_PARSE_ERROR':
+    case 'EDITOR_NOTIFICATION':
       return action.payload;
-    case 'CLEAR_EDITOR_ERROR':
+    case 'CLEAR_EDITOR_NOTIFICATION':
       return '';
     default:
       return state;

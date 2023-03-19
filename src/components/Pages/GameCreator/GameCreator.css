@@ -5,15 +5,21 @@
 }
 
 .room-container {
+    max-width: 25vw;
     margin: .4em;
     padding: .25em;
     border: 1px solid;
     border-color: #12ff1e;
+    overflow: hidden;
+    aspect-ratio: 1 / 1.15;
 }
 
 .room-container-image {
+    max-width: 25vw;
+    aspect-ratio: 1 / 1;
     font-size: 6pt;
     line-height: .85em;
+    overflow: hidden;
 }
 
 .editor-textarea {

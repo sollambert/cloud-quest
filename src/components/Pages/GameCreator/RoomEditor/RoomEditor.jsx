@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import ImageParser from "./ImageParser";
+
 function RoomEditor({ room, cancel }) {
 
     const dispatch = useDispatch();
@@ -29,6 +31,16 @@ function RoomEditor({ room, cancel }) {
         setRoomInfo({ ...roomInfo, [key]: e.target.value })
     }
 
+    const handleKeyDown = (e) => {
+        if (errors.editorMessage) {
+            dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key == 's') {
+            e.preventDefault();;
+            saveRoom();
+        }
+    }
+
     const saveRoom = () => {
         try {
             const interactables = JSON.parse(roomInfo.interactables);
@@ -46,9 +58,10 @@ function RoomEditor({ room, cancel }) {
                     exits
                 }, callback: cancel
             });
+            dispatch({ type: 'EDITOR_NOTIFICATION', payload: "Room contents saved."});
         } catch (error) {
-            dispatch({ type: 'JSON_PARSE_ERROR', payload: error.message});
-            console.error(error);
+            dispatch({ type: 'EDITOR_NOTIFICATION', payload: error.message});
+            // console.error(error);
         }
     }
 
@@ -61,7 +74,8 @@ function RoomEditor({ room, cancel }) {
     }
 
     return (
-        <>
+        <div onKeyDown={handleKeyDown}>
+            <ImageParser roomInfo={roomInfo} setRoomInfo={setRoomInfo} roomImage={room.image}/>
             {errors.editorMessage && (
                 <h3 className="alert" role="alert">
                     {errors.editorMessage}
@@ -126,7 +140,7 @@ function RoomEditor({ room, cancel }) {
                 </div>
                 : ''}
             </div>
-        </>
+        </div>
     )
 }
 

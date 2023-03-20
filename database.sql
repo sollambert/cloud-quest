@@ -123,11 +123,11 @@ VALUES('car',
 		"description": "The front door to your old house. Looks like it''s locked.",
 		"use": {
 			"4": {
-				"effect": {
+				"set_var": {
 					"house_unlocked": true,
-					"new_description": "The front door to your old house. It''s been unlocked.",
-					"new_exits": ["house","living room"]
 				},
+					"new_description": "The front door to your old house. It''s been unlocked.",
+					"new_exits": ["house","living room"],
 				"message": "You slip the key into the deadbolt of the door and it gives you a resounding ''click''. You''re in."
 			}
 		}
@@ -137,12 +137,9 @@ VALUES('car',
 		"display_name": "welcome mat",
 		"description": "Printed on the mat is a large WELCOME in fading letters. You remember you used to keep a spare key under it.",
 		"move": {
-			"shows_item":
-			{
-				"items": ["62"],
+			"shows_item":["4"],
 				"message": "And find a key under it!",
 				"new_description": "Printed on the mat is a large WELCOME in fading letters. You''ve already found the secret spare key."
-			}
 		}
 	}
 ]',
@@ -158,10 +155,10 @@ VALUES('car',
 		"description": "The generator is old. Upon further investigation there seems to be some gas already in there but it won''t turn on. Looks like a rodent did some damage to the wiring.",
 		"use": {
 			"1": {
-				"effect": {
+				"set_var": {
 					"generator": true,
-					"new_description": "After replacing the wiring, the generator is humming with life."
 				},
+				"new_description": "After replacing the wiring, the generator is humming with life.",
 				"message": "You replace the chewed wiring, pull the ripcord, and the generator springs to life with a roar!"
 			}
 		}
@@ -183,11 +180,8 @@ VALUES('car',
 		"display_name": "box of fuses",
 		"description": "Sitting on the bookshelf is a box of fuses. Convenient.",
 		"open": {
-			"shows_item":
-			{
-				"items": ["5"],
-				"message": "There''s one lonely fuse sitting inside the box." 
-			}
+			"shows_item":["5"],
+				"message": "There''s one lonely fuse sitting inside the box."
 		}
 	}
 ]',
@@ -214,11 +208,11 @@ VALUES('car',
 				{
 					"5":
 					{
-						"effect":
+						"set_var":
 						{
 							"electricity": true,
-							"new_description": "With the fuse replaced electricity can flow once again. Time to get that calculator app running."
 						},
+							"new_description": "With the fuse replaced electricity can flow once again. Time to get that calculator app running.",
 						"message": "You click the new fuse into socket and with a flip of the switch, you''re one step closer to saving the world''s calculations."
 					}
 				}
@@ -235,10 +229,7 @@ VALUES('car',
 		{
 			"3":
 			{
-				"effect":
-				{
-					"new_description": "You see the little spiders gathered around the donut, still dancing and still snacking."
-				},
+					"new_description": "You see the little spiders gathered around the donut, still dancing and still snacking.",
 				"message": "You place the donut in the spider''s web. A few of its buddies come out of the webwork and they all start a synchronized dance with each other. Every now and then a spider stops dancing for a brief moment to snack on the delicious looking donut."
 			}
 		}
@@ -263,11 +254,8 @@ VALUES('car',
 					"electricity": true
 				},
 				"condition_message": "Looks like there''s no power. I must be missing something.",
-				"effect":
-				{
-					"deploy": true,
-					"new_description": "You''ve done it!!! The world''s simple arithmetic has been saved!"
-				},
+				"deploy": true,
+				"new_description": "You''ve done it!!! The world''s simple arithmetic has been saved!",
 				"message": "You grab the calculator firmly with both hands and give it a solid shove into the computer''s disk tray. After a couple solid smacks it slides in and the screen whirrs to life... You''ve done it. Let''s get to testing and gather back around for a quick retro on the whole experience."
 			}
 		}

@@ -61,8 +61,7 @@ function GameInfoEditor({ game, items }) {
 
     return (
         <div onKeyDown={handleKeyDown}>
-            {/* {JSON.stringify(gameInfo)} */}
-            {gameInfo.name != undefined && gameInfo.start_location != undefined ?
+            {gameInfo.name != undefined && gameInfo.start_location != undefined && itemChecks.length > 0 ?
                 <>
                 <div>
                     <button className="btn" onClick={updateGameInfo}>UPDATE GAME INFO</button>

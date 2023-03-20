@@ -25,6 +25,7 @@ import Creator from '../Pages/GameCreator/Creator';
 import Editor from '../Pages/GameCreator/Editor';
 
 import './App.css';
+import './Range.css'
 
 function App() {
 

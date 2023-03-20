@@ -30,3 +30,9 @@
     font-family: 'Apple II';
     width: 98vw;
 }
+
+.editor-range {
+    background-color: #030e00;
+    color: #12ff1e;
+    border-color: #12ff1e;
+}

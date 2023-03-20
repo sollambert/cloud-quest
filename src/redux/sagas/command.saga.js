@@ -217,10 +217,13 @@ function useItem(interactIndex, itemId, room, response) {
     }
 
     if (response.removeItem) {
+        let found = false;
         gameState.inventory = gameState.inventory.filter((invId) => {
-            if (invId != itemId) {
+            if (invId != itemId || found) {
                 return invId
-            };
+            } else {
+                found = true;
+            }
         })
     }
     return response;
@@ -288,7 +291,7 @@ function handleInteraction(roomIndex, room, interactIndex, interactable, respons
     }
     //new exits for room that user is in. will overwrite old exits
     if (interactable[key]?.new_exits) {
-                gameState.rooms[roomIndex].exits = interactable[key].new_exits;
+        gameState.rooms[roomIndex].exits = interactable[key].new_exits;
     }
     //sets various gamestate variables for global state. must be and object, the keys of which designate which variables to update with their corresponding value
     if (interactable[key]?.set_var) {

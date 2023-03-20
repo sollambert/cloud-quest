@@ -9,7 +9,8 @@ function ImageParser({ roomInfo, setRoomInfo }) {
 
     function sketch(p5) {
         if (width > 0 && width <= 90) {
-            const density = "_.,-=+:;!?$W#@Ñ"
+            // const density = "_.,-=+:;!?$W#@Ñ"
+            const density = ".,-=+*:;!?$"
             // const density = "_.,-=+:;cba!?0123456789$W#@Ñ";
             let img;
 
@@ -43,6 +44,8 @@ function ImageParser({ roomInfo, setRoomInfo }) {
                     asciiImage += newLine + '\\n';
                 }
                 setRoomInfo({ ...roomInfo, image: asciiImage })
+
+                //reset imgUrl value to prevent re-rendering on react render
                 setImgUrl('');
             }
         }
@@ -60,6 +63,7 @@ function ImageParser({ roomInfo, setRoomInfo }) {
 
     return (
         <>
+        //render new image ONLY when there is an image URL submitted
             {imgUrl != '' ? <>
                 <ReactP5Wrapper sketch={sketch} />
             </> : ''}

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import ImageParser from "./ImageParser";
 
@@ -7,6 +7,8 @@ function RoomEditor({ room, cancel }) {
 
     const dispatch = useDispatch();
     const errors = useSelector(store => store.errors);
+    const textAreaRef = useRef(null);
+    const [cursor, setCursor] = useState(-1);
 
     const [roomInfo, setRoomInfo] = useState({
         id: -1,
@@ -18,26 +20,50 @@ function RoomEditor({ room, cancel }) {
     });
 
     useEffect(() => {
-        // if (room.id != -1) {
-            setRoomInfo({
-                ...room,
-                exits: JSON.stringify(room.exits),
-                interactables: JSON.stringify(room.interactables, null, 2)
-            });
-        // }
+        setRoomInfo({
+            ...room,
+            exits: JSON.stringify(room.exits),
+            interactables: JSON.stringify(room.interactables, null, 2)
+        });
     }, [room]);
+
+    useEffect(() => {
+        if (cursor != -1) {
+            textAreaRef.current.selectionStart = cursor;
+            textAreaRef.current.selectionEnd = cursor;
+            setCursor(-1);
+        }
+    }, [roomInfo.interactables])
 
     const handleChange = (e, key) => {
         setRoomInfo({ ...roomInfo, [key]: e.target.value })
     }
 
-    const handleKeyDown = (e) => {
+    const handleSaveKeys = (e) => {
         if (errors.editorMessage) {
-            dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
+            dispatch({ type: "CLEAR_EDITOR_NOTIFICATION" });
         }
         if ((e.ctrlKey || e.metaKey) && e.key == 's') {
             e.preventDefault();;
             saveRoom();
+        }
+    }
+
+    const handleTabs = (e) => {
+        if (e.key == 'Tab') {
+            console.log(textAreaRef.current.selectionStart);
+            console.log(textAreaRef);
+            e.preventDefault();
+            let newJSON = (
+                roomInfo.interactables.slice(0, textAreaRef.current.selectionStart)
+                + ' '.repeat(4) +
+                roomInfo.interactables.slice(textAreaRef.current.selectionEnd, roomInfo.interactables.length));
+            setCursor(textAreaRef.current.selectionStart + 4);
+            setRoomInfo(
+                {
+                    ...roomInfo,
+                    interactables: newJSON
+                });
         }
     }
 
@@ -58,11 +84,11 @@ function RoomEditor({ room, cancel }) {
                     exits
                 }, callback: () => {
                     // cancel();
-                    dispatch({ type: 'EDITOR_NOTIFICATION', payload: "Room contents saved."});
+                    dispatch({ type: 'EDITOR_NOTIFICATION', payload: "Room contents saved." });
                 }
             });
         } catch (error) {
-            dispatch({ type: 'EDITOR_NOTIFICATION', payload: error.message});
+            dispatch({ type: 'EDITOR_NOTIFICATION', payload: error.message });
             // console.error(error);
         }
     }
@@ -70,14 +96,14 @@ function RoomEditor({ room, cancel }) {
     const deleteRoom = () => {
         dispatch({
             type: "DELETE_ROOM_EDITOR",
-            payload: {game_id: room.game_id, id: roomInfo.id},
+            payload: { game_id: room.game_id, id: roomInfo.id },
             callback: cancel
         })
     }
 
     return (
-        <div onKeyDown={handleKeyDown}>
-            <ImageParser roomInfo={roomInfo} setRoomInfo={setRoomInfo} roomImage={room.image}/>
+        <div onKeyDown={handleSaveKeys}>
+            <ImageParser roomInfo={roomInfo} setRoomInfo={setRoomInfo} roomImage={room.image} />
             {errors.editorMessage && (
                 <h3 className="alert" role="alert">
                     {errors.editorMessage}
@@ -97,7 +123,7 @@ function RoomEditor({ room, cancel }) {
                     <label htmlFor="description">Description: </label>
                 </div>
                 <textarea
-                    style={{ width: "98vw", height: "5vw" }}
+                    style={{ height: "5vw" }}
                     name="interactables" className={"editor-textarea"}
                     value={roomInfo.description}
                     onChange={e => handleChange(e, "description")}
@@ -108,10 +134,12 @@ function RoomEditor({ room, cancel }) {
             </div>
             <div>
                 <textarea
-                    style={{ width: "98vw", height: "30vw" }}
+                    style={{ height: "30vw" }}
+                    ref={textAreaRef}
                     name="interactables"
                     className={"editor-textarea"}
                     value={roomInfo.interactables}
+                    onKeyDown={handleTabs}
                     onChange={e => handleChange(e, "interactables")}
                 />
             </div>
@@ -120,27 +148,27 @@ function RoomEditor({ room, cancel }) {
             </div>
             <div>
                 <textarea
-                    style={{ width: "98vw", height: "4vw" }}
+                    style={{ height: "4vw" }}
                     name="exits"
                     className={"editor-textarea"}
                     value={roomInfo.exits}
                     onChange={e => handleChange(e, "exits")}
                 />
             </div>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                 <div>
                     <button className="btn" onClick={saveRoom}>SAVE</button>
                     <button className="btn" onClick={cancel}>GO BACK</button>
                 </div>
                 {roomInfo.id != -1 ?
-                
-                <div style={{alignSelf: "right"}}>
-                    <button
-                        style={{backgroundColor: "red", alignSelf: "right"}}
-                        className="btn" 
-                        onClick={deleteRoom}>DELETE</button>
-                </div>
-                : ''}
+
+                    <div style={{ alignSelf: "right" }}>
+                        <button
+                            style={{ backgroundColor: "red", alignSelf: "right" }}
+                            className="btn"
+                            onClick={deleteRoom}>DELETE</button>
+                    </div>
+                    : ''}
             </div>
         </div>
     )

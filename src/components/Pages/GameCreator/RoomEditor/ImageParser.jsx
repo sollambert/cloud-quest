@@ -22,7 +22,7 @@ function ImageParser({ roomInfo, setRoomInfo }) {
         if (invert) {
             tempDensity = tempDensity.split('').reverse().join('');
         }
-        if (width > 0 && width <= 90) {
+        if (width > 0 && width <= 60) {
             // const density = ".,-=+*:;!?$"
             // const density = "_.,-=+:;cba!?0123456789$W#@Ñ";
             let img;
@@ -105,7 +105,7 @@ function ImageParser({ roomInfo, setRoomInfo }) {
                             style={{ width: "5vw" }}
                             type="number"
                             min="45"
-                            max="90"
+                            max="60"
                             value={width}
                             onChange={(e) => setWidth(e.target.value)}
                         />

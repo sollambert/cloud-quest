@@ -13,7 +13,8 @@ function Creator() {
     }
 
     const createGame = () => {
-        dispatch({type: "NEW_GAME_EDITOR", payload: name, callback: forwardUser})
+        dispatch({type: "NEW_GAME_EDITOR",
+        payload: {name}, callback: forwardUser,})
     }
 
     return(

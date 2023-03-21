@@ -15,6 +15,8 @@ function GameCreator() {
     const game = useSelector(store => store.gameCreator);
     const [roomEditing, setRoomEditing] = useState(0);
     const errors = useSelector(store => store.errors);
+    const [checkDelete, setCheckDelete] = useState(false);
+    const [deleteInput, setDeleteInput] = useState('');
 
     const [rooms, setRooms] = useState(game.rooms);
     const [items, setItems] = useState(game.items);
@@ -51,6 +53,32 @@ function GameCreator() {
         }
     }
 
+    const handleDeleteKeydown = (e) => {
+        if (e.key == 'Enter') {
+            deleteGame();
+        }
+    }
+
+    const deleteGame = () => {
+        if (deleteInput == game.gameInfo.name) {
+            dispatch({
+                type: "DELETE_GAME",
+                payload: game_id,
+                callback: () => {
+                    history.push('/games')
+                }
+            })
+        }
+    }
+
+    const deleteGameBool = () => {
+        setCheckDelete(true);
+    }
+
+    const cancelDelete = () => {
+        setCheckDelete(false);
+    }
+
     return (
         <div onKeyDown={handleKeyDown}>
             {roomEditing == 0 ?
@@ -85,6 +113,32 @@ function GameCreator() {
                         })}
                     </div>
                     <ItemEditor items={items} game_id={game_id} />
+                    <div style={{ alignSelf: "right" }}>
+                        {checkDelete ?
+                            <>
+                                <label>Are you sure? Type '{game.gameInfo.name}' to confirm:</label>
+                                <input
+                                    type="text"
+                                    value={deleteInput}
+                                    onChange={e => setDeleteInput(e.target.value)}
+                                    onKeyDown={handleDeleteKeydown} />
+                                <div>
+                                    <button
+                                        style={{ backgroundColor: "red", alignSelf: "right" }}
+                                        className="btn" onClick={deleteGame}>DELETE</button>
+                                    <button
+                                        className="btn"
+                                        onClick={cancelDelete}>
+                                        CANCEL
+                                    </button>
+                                </div>
+                            </>
+                            :
+                            <button
+                                style={{ backgroundColor: "red", alignSelf: "right" }}
+                                className="btn"
+                                onClick={deleteGameBool}>DELETE</button>}
+                    </div>
                 </>
                 :
                 <>

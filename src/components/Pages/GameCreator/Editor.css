@@ -17,7 +17,7 @@
 .room-container-image {
     max-width: 25vw;
     aspect-ratio: 1 / 1;
-    font-size: 6pt;
+    font-size: min(.45vw,6pt);
     line-height: .85em;
     overflow: hidden;
 }

@@ -69,12 +69,16 @@ function* parseCommand(message) {
             if (split[2]) {
                 split[1] = `${split[1]} ${split[2]}`;
             }
-            response.messages.push(`You can't open the ${split[1]} any further.`)
+            let opened = false;
             for (let interactIndex in interactables) {
                 if (interactables[interactIndex].open && interactables[interactIndex].name.includes(split[1])) {
                     response.messages.push(`You open the ${split[1]}.`)
+                    opened = true;
                     response = handleOpen(interactIndex, room, response);
                 }
+            }
+            if (!opened)  {
+                response.messages.push(`You can't open the ${split[1]} any further.`)
             }
             return response;
         case 'use':
@@ -119,18 +123,26 @@ function* parseCommand(message) {
             if (split[2]) {
                 split[1] = `${split[1]} ${split[2]}`;
             }
+            let exists = false;
+            let moved = false;
             for (let index in interactables) {
                 if (interactables[index].name.includes(split[1])) {
-                    response.messages.push(`You don't know how you can move the ${split[1]}`);
                     if (interactables[index]?.move) {
                         // console.log(interactables[index]?.move)
                         response.messages.push(`You move the ${split[1]}...`);
+                        moved = true;
                         response = handleMove(index, room, response)
                         return response;
                     }
+                    exists = true;
                 }
             }
-            response.messages.push(`You don't see a ${split[1]} here.`)
+            if (!moved) {
+                response.messages.push(`You don't know how you can move the ${split[1]}`);
+            }
+            if (!exists) {
+                response.messages.push(`You don't see a ${split[1]} here.`)
+            }
             return response;
         case 'exits':
             response.type = "EXITS";
@@ -275,7 +287,7 @@ function handleInteraction(roomIndex, room, interactIndex, interactable, respons
         for (let condition of Object.keys(interactable[key]?.condition)) {
             console.log(gameState[condition], interactable[key]?.condition[condition])
             if (gameState[condition] != interactable[key]?.condition[condition]) {
-                response.messages.push(interactable[key]?.conditionMessage);
+                response.messages.push(interactable[key]?.condition_message);
                 conditionsMet = false;
                 response.removeItem = false;
                 break;

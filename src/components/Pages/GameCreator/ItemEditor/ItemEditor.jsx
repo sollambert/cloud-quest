@@ -51,7 +51,7 @@ function ItemEditor({ game_id, items }) {
 
     return (
         <div>
-            <table style={{ width: "99vw" }}>
+            <table style={{ width: "98vw" }}>
                 <thead>
                     <tr>
                         <th>Item Name</th>

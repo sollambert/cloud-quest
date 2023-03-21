@@ -17,16 +17,22 @@
 .room-container-image {
     max-width: 25vw;
     aspect-ratio: 1 / 1;
-    font-size: 6pt;
+    font-size: min(.45vw,6pt);
     line-height: .85em;
     overflow: hidden;
 }
 
 .editor-textarea {
-    margin: 5px;
     margin-bottom: 10px;
     background-color: #030e00;
     color: #12ff1e;
     border-color: #12ff1e;
     font-family: 'Apple II';
+    width: 98vw;
+}
+
+.editor-range {
+    background-color: #030e00;
+    color: #12ff1e;
+    border-color: #12ff1e;
 }

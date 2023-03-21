@@ -65,13 +65,13 @@ CREATE TABLE "games" (
 ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk0" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE CASCADE;
 ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk1" FOREIGN KEY ("item_id") REFERENCES "items"("id") ON DELETE CASCADE;
 
-ALTER TABLE "saves" ADD CONSTRAINT "saves_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
-ALTER TABLE "saves" ADD CONSTRAINT "saves_fk1" FOREIGN KEY ("game_id") REFERENCES "games"("id");
+ALTER TABLE "saves" ADD CONSTRAINT "saves_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
+ALTER TABLE "saves" ADD CONSTRAINT "saves_fk1" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE CASCADE;
 
-ALTER TABLE "rooms" ADD CONSTRAINT "rooms_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
-ALTER TABLE "items" ADD CONSTRAINT "items_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
+ALTER TABLE "rooms" ADD CONSTRAINT "rooms_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE CASCADE;
+ALTER TABLE "items" ADD CONSTRAINT "items_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE CASCADE;
 
-ALTER TABLE "games" ADD CONSTRAINT "games_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
+ALTER TABLE "games" ADD CONSTRAINT "games_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
 
 --create admin user
 insert into "user" ("username", "password")
@@ -124,10 +124,10 @@ VALUES('car',
 		"use": {
 			"4": {
 				"set_var": {
-					"house_unlocked": true,
+					"house_unlocked": true
 				},
-				"new_description": "The front door to your old house. It''s been unlocked.",
-				"new_exits": ["house","living room"],
+					"new_description": "The front door to your old house. It''s been unlocked.",
+					"new_exits": ["house","living room"],
 				"message": "You slip the key into the deadbolt of the door and it gives you a resounding ''click''. You''re in."
 			}
 		}
@@ -138,8 +138,8 @@ VALUES('car',
 		"description": "Printed on the mat is a large WELCOME in fading letters. You remember you used to keep a spare key under it.",
 		"move": {
 			"shows_item":["4"],
-			"message": "And find a key under it!",
-			"new_description": "Printed on the mat is a large WELCOME in fading letters. You''ve already found the secret spare key."
+				"message": "And find a key under it!",
+				"new_description": "Printed on the mat is a large WELCOME in fading letters. You''ve already found the secret spare key."
 		}
 	}
 ]',
@@ -156,7 +156,7 @@ VALUES('car',
 		"use": {
 			"1": {
 				"set_var": {
-					"generator": true,
+					"generator": true
 				},
 				"new_description": "After replacing the wiring, the generator is humming with life.",
 				"message": "You replace the chewed wiring, pull the ripcord, and the generator springs to life with a roar!"
@@ -181,7 +181,7 @@ VALUES('car',
 		"description": "Sitting on the bookshelf is a box of fuses. Convenient.",
 		"open": {
 			"shows_item":["5"],
-			"message": "There''s one lonely fuse sitting inside the box."
+				"message": "There''s one lonely fuse sitting inside the box."
 		}
 	}
 ]',
@@ -208,8 +208,11 @@ VALUES('car',
 				{
 					"5":
 					{
-						"set_var": {"electricity": true},
-						"new_description": "With the fuse replaced electricity can flow once again. Time to get that calculator app running.",
+						"set_var":
+						{
+							"electricity": true
+						},
+							"new_description": "With the fuse replaced electricity can flow once again. Time to get that calculator app running.",
 						"message": "You click the new fuse into socket and with a flip of the switch, you''re one step closer to saving the world''s calculations."
 					}
 				}
@@ -227,7 +230,7 @@ VALUES('car',
 			"3":
 			{
 				"new_description": "You see the little spiders gathered around the donut, still dancing and still snacking. It fills you with determination.",
-				"message": "You place the donut in the spider''s web. A few of its buddies come out of the webwork and they all start a synchronized dance with each other. It fills you with determination."
+				"message": "You place the donut in the spider''s web. A few of its buddies come out of the webwork and they all start a synchronized dance with each other. Every now and then a spider stops dancing for a brief moment to snack on the delicious looking donut. It fills you with determination."
 			}
 		}
 	}
@@ -251,10 +254,7 @@ VALUES('car',
 					"electricity": true
 				},
 				"condition_message": "Looks like there''s no power. I must be missing something.",
-				"set_var":
-				{
-					"deploy": true
-				},
+				"deploy": true,
 				"new_description": "You''ve done it! The world''s simple arithmetic has been saved!",
 				"message": "You grab the calculator firmly with both hands and give it a solid shove into the computer''s disk tray. After a couple solid smacks it slides in and the screen whirrs to life... You''ve done it. Let''s get to testing and gather back around for a quick retro on the whole experience."
 			}

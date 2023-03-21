@@ -18,15 +18,15 @@ JOIN rooms r ON r.game_id = g.id
 WHERE g.id = $1 AND r.game_id = $1 AND r.id = $2 AND g.user_id = $3;`;
 
 router.post('/create', rejectUnauthenticated, async (req, res) => {
-
+    console.log(req.body)
     const newGame = `INSERT INTO games ("name", "start_location","user_id","inventory")
-        VALUES ('new-game', '', $1, '[]')
+        VALUES ($1, '', $2, '[]')
         RETURNING id;`
 
     const connection = await pool.connect();
     try {
         await connection.query('BEGIN');
-        const gRes = await connection.query(newGame, [req.user.id]);
+        const gRes = await connection.query(newGame, [req.body.name, req.user.id]);
         await connection.query('COMMIT');
         res.send(gRes.rows[0]);
     } catch (error) {
@@ -93,6 +93,32 @@ router.get('/:id', rejectUnauthenticated, async (req, res) => {
         })
         await connection.query('COMMIT');
         res.send(gameObject);
+    } catch (error) {
+        if (error.code == 403) {
+            res.sendStatus(403)
+        } else {
+            await connection.query('ROLLBACK');
+            console.log(`Transaction Error - Rolling back transfer`, error);
+            res.sendStatus(500);
+        }
+    } finally {
+        connection.release();
+        res.end();
+    }
+})
+
+router.delete('/:id', rejectUnauthenticated, async (req, res) => {
+    const deleteQuery = `
+    DELETE from games
+    WHERE user_id = $1 AND id = $2;`;
+
+    const connection = await pool.connect();
+
+    try {
+        await connection.query('BEGIN');
+        await connection.query(deleteQuery, [req.user.id, req.params.id]);
+        await connection.query('COMMIT');
+        res.sendStatus(203);
     } catch (error) {
         if (error.code == 403) {
             res.sendStatus(403)

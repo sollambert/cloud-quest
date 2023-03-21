@@ -65,13 +65,13 @@ CREATE TABLE "games" (
 ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk0" FOREIGN KEY ("room_id") REFERENCES "rooms"("id") ON DELETE CASCADE;
 ALTER TABLE "rooms_items" ADD CONSTRAINT "rooms_items_fk1" FOREIGN KEY ("item_id") REFERENCES "items"("id") ON DELETE CASCADE;
 
-ALTER TABLE "saves" ADD CONSTRAINT "saves_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
-ALTER TABLE "saves" ADD CONSTRAINT "saves_fk1" FOREIGN KEY ("game_id") REFERENCES "games"("id");
+ALTER TABLE "saves" ADD CONSTRAINT "saves_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
+ALTER TABLE "saves" ADD CONSTRAINT "saves_fk1" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE CASCADE;
 
-ALTER TABLE "rooms" ADD CONSTRAINT "rooms_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
-ALTER TABLE "items" ADD CONSTRAINT "items_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id");
+ALTER TABLE "rooms" ADD CONSTRAINT "rooms_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE CASCADE;
+ALTER TABLE "items" ADD CONSTRAINT "items_fk0" FOREIGN KEY ("game_id") REFERENCES "games"("id") ON DELETE CASCADE;
 
-ALTER TABLE "games" ADD CONSTRAINT "games_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id");
+ALTER TABLE "games" ADD CONSTRAINT "games_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
 
 --create admin user
 insert into "user" ("username", "password")
@@ -229,8 +229,8 @@ VALUES('car',
 		{
 			"3":
 			{
-					"new_description": "You see the little spiders gathered around the donut, still dancing and still snacking.",
-				"message": "You place the donut in the spider''s web. A few of its buddies come out of the webwork and they all start a synchronized dance with each other. Every now and then a spider stops dancing for a brief moment to snack on the delicious looking donut."
+				"new_description": "You see the little spiders gathered around the donut, still dancing and still snacking. It fills you with determination.",
+				"message": "You place the donut in the spider''s web. A few of its buddies come out of the webwork and they all start a synchronized dance with each other. Every now and then a spider stops dancing for a brief moment to snack on the delicious looking donut. It fills you with determination."
 			}
 		}
 	}
@@ -255,7 +255,7 @@ VALUES('car',
 				},
 				"condition_message": "Looks like there''s no power. I must be missing something.",
 				"deploy": true,
-				"new_description": "You''ve done it!!! The world''s simple arithmetic has been saved!",
+				"new_description": "You''ve done it! The world''s simple arithmetic has been saved!",
 				"message": "You grab the calculator firmly with both hands and give it a solid shove into the computer''s disk tray. After a couple solid smacks it slides in and the screen whirrs to life... You''ve done it. Let''s get to testing and gather back around for a quick retro on the whole experience."
 			}
 		}

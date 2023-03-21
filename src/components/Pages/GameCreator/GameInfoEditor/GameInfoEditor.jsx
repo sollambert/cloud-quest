@@ -21,7 +21,7 @@ function GameInfoEditor({ game, items }) {
     }, [game]);
 
     const handleGameInfoChange = (e, key, index) => {
-        dispatch({type: "CLEAR_EDITOR_NOTIFICATION"});
+        dispatch({ type: "CLEAR_EDITOR_NOTIFICATION" });
         if (key == "inventory") {
             if (e.target.checked) {
                 let checks = itemChecks;
@@ -53,19 +53,21 @@ function GameInfoEditor({ game, items }) {
     }
 
     const updateGameInfo = () => {
-        dispatch({ type: "SAVE_GAME_INFO_EDITOR", payload: gameInfo,
+        dispatch({
+            type: "SAVE_GAME_INFO_EDITOR", payload: gameInfo,
             callback: () => {
-        dispatch({ type: 'EDITOR_NOTIFICATION', payload: "Game info saved."});
-    }});
+                dispatch({ type: 'EDITOR_NOTIFICATION', payload: "Game info saved." });
+            }
+        });
     }
 
     return (
         <div onKeyDown={handleKeyDown}>
-            {gameInfo.name != undefined && gameInfo.start_location != undefined && itemChecks.length > 0 ?
+            {gameInfo.name != undefined && gameInfo.start_location != undefined ?
                 <>
-                <div>
-                    <button className="btn" onClick={updateGameInfo}>UPDATE GAME INFO</button>
-                </div>
+                    <div>
+                        <button className="btn" onClick={updateGameInfo}>UPDATE GAME INFO</button>
+                    </div>
                     <div>
                         <label htmlFor="game-name">Game Name:</label>
                         <input
@@ -86,17 +88,19 @@ function GameInfoEditor({ game, items }) {
                             onChange={(e) => handleGameInfoChange(e, "start_location")}
                         />
                     </div>
-                    <div>
-                        <label htmlFor="game-inventory">Inventory: </label>
-                        {items && items.map((item, i) => {
-                            return (
-                                <span key={i}>
-                                    <label htmlFor={item.name}>| {item.name}</label>
-                                    <input name={item.name} type="checkbox" value={item.id} checked={itemChecks[i]} onChange={(e) => handleGameInfoChange(e, "inventory", i)} />
-                                </span>
-                            )
-                        })}
-                    </div>
+                    {itemChecks.length > 0 ?
+                        <div>
+                            <label htmlFor="game-inventory">Inventory: </label>
+                            {items && items.map((item, i) => {
+                                return (
+                                    <span key={i}>
+                                        <label htmlFor={item.name}>| {item.name}</label>
+                                        <input name={item.name} type="checkbox" value={item.id} checked={itemChecks[i]} onChange={(e) => handleGameInfoChange(e, "inventory", i)} />
+                                    </span>
+                                )
+                            })}
+                        </div>
+                        : ''}
                 </>
                 : ''}
         </div>

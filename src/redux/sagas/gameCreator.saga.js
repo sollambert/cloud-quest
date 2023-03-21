@@ -110,6 +110,15 @@ function* saveGameInfo(action) {
     }
 }
 
+function* deleteGame(action) {
+    try {
+        yield axios.delete(`api/games/editor/${action.payload}`);
+        yield action.callback();
+    } catch (error) {
+        
+    }
+}
+
 //watcher saga
 function* gameCreatorSaga() {
     yield takeLatest("ADD_ITEM_EDITOR", addItem);
@@ -120,6 +129,7 @@ function* gameCreatorSaga() {
     yield takeLatest("SAVE_ROOM_EDITOR", saveRoom);
     yield takeLatest("SAVE_NEW_ROOM_EDITOR", addRoom);
     yield takeLatest("DELETE_ROOM_EDITOR", deleteRoom);
+    yield takeLatest("DELETE_GAME", deleteGame);
 }
 
 export default gameCreatorSaga;

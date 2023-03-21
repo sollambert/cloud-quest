@@ -39,138 +39,143 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Router>
-      <div>
-        <Nav />
-        <Switch>
-          {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-          <Redirect exact from="/" to="/games" />
+    <>
+      {user.loading ?
+        ''
+        :
+        <Router>
+          <div>
+            <Nav />
+            <Switch>
+              {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
+              <Redirect exact from="/" to="/games" />
 
-          {/* Visiting localhost:3000/about will show the about page. */}
-          <Route
-            // shows AboutPage at all times (logged in or not)
-            exact
-            path="/about"
-          >
-            <AboutPage />
-          </Route>
+              {/* Visiting localhost:3000/about will show the about page. */}
+              <Route
+                // shows AboutPage at all times (logged in or not)
+                exact
+                path="/about"
+              >
+                <AboutPage />
+              </Route>
 
-          {/* For protected routes, the view could show one of several things on the same route.
+              {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:3000/user will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
             Even though it seems like they are different pages, the user is always on localhost:3000/user */}
-          <ProtectedRoute
-            // logged in shows UserPage else shows LoginPage
-            exact
-            path="/home"
-          >
-            <Home />
-          </ProtectedRoute>
+              <ProtectedRoute
+                // logged in shows UserPage else shows LoginPage
+                exact
+                path="/home"
+              >
+                <Home />
+              </ProtectedRoute>
 
-          {/* Brings user to inventory view during gameplay */}
-          <ProtectedRoute
-            exact
-            path="/inventory"
-          >
-            <Inventory />
-          </ProtectedRoute>
+              {/* Brings user to inventory view during gameplay */}
+              <ProtectedRoute
+                exact
+                path="/inventory"
+              >
+                <Inventory />
+              </ProtectedRoute>
 
-          {/* Brings user to saves view during gameplay */}
-          <ProtectedRoute
-            exact
-            path="/saves"
-          >
-            <Saves />
-          </ProtectedRoute>
+              {/* Brings user to saves view during gameplay */}
+              <ProtectedRoute
+                exact
+                path="/saves"
+              >
+                <Saves />
+              </ProtectedRoute>
 
-          {/* Brings user to help view during gameplay */}
-          <ProtectedRoute
-            exact
-            path="/help"
-          >
-            <Help />
-          </ProtectedRoute>
+              {/* Brings user to help view during gameplay */}
+              <ProtectedRoute
+                exact
+                path="/help"
+              >
+                <Help />
+              </ProtectedRoute>
 
 
-          {/* Navigates to new game editor view */}
-          <Route
-            exact
-            path="/create">
-            {user.id ?
-              <Creator />
-              :
-              <Redirect to="/login" />
-            }
-          </Route>
-
-          {/* Navigates to game editor view */}
-          <Route
-            exact
-            path="/edit/:game_id">
-            {user.id ?
-              <Editor />
-              :
-              <Redirect to="/login" />
-            }
-          </Route>
-
-          {/* Brings user to games list view if user is authenticated,
-          otherwise redirects to login page */}
-          <Route
-            exact
-            path="/games"
-          >
-            {user.id ?
-              <>
-                {gameState.id ?
-                  <Redirect to="/home" />
+              {/* Navigates to new game editor view */}
+              <Route
+                exact
+                path="/create">
+                {user.id ?
+                  <Creator />
                   :
-                  <GameSelector />
+                  <Redirect to="/login" />
                 }
-              </>
-              :
-              <Redirect to="/login" />
-            }
-          </Route>
+              </Route>
 
-          {/* Login page */}
-          <Route
-            exact
-            path="/login"
-          >
-            {user.id ?
-              // If the user is already logged in, 
-              // redirect to the /user page
-              <Redirect to="/games" />
-              :
-              // Otherwise, show the login page
-              <LoginPage />
-            }
-          </Route>
+              {/* Navigates to game editor view */}
+              <Route
+                exact
+                path="/edit/:game_id">
+                {user.id ?
+                  <Editor />
+                  :
+                  <Redirect to="/login" />
+                }
+              </Route>
 
-          {/* Registration page */}
-          <Route
-            exact
-            path="/registration"
-          >
-            {user.id ?
-              // If the user is already logged in, 
-              // redirect them to the /user page
-              <Redirect to="/games" />
-              :
-              // Otherwise, show the registration page
-              <RegisterPage />
-            }
-          </Route>
+              {/* Brings user to games list view if user is authenticated,
+          otherwise redirects to login page */}
+              <Route
+                exact
+                path="/games"
+              >
+                {user.id ?
+                  <>
+                    {gameState.id ?
+                      <Redirect to="/home" />
+                      :
+                      <GameSelector />
+                    }
+                  </>
+                  :
+                  <Redirect to="/login" />
+                }
+              </Route>
 
-          {/* If none of the other routes matched, we will show a 404. */}
-          <Route>
-            <h1>404</h1>
-          </Route>
-        </Switch>
-        <Footer />
-      </div>
-    </Router>
+              {/* Login page */}
+              <Route
+                exact
+                path="/login"
+              >
+                {user.id ?
+                  // If the user is already logged in, 
+                  // redirect to the /user page
+                  <Redirect to="/games" />
+                  :
+                  // Otherwise, show the login page
+                  <LoginPage />
+                }
+              </Route>
+
+              {/* Registration page */}
+              <Route
+                exact
+                path="/registration"
+              >
+                {user.id ?
+                  // If the user is already logged in, 
+                  // redirect them to the /user page
+                  <Redirect to="/games" />
+                  :
+                  // Otherwise, show the registration page
+                  <RegisterPage />
+                }
+              </Route>
+
+              {/* If none of the other routes matched, we will show a 404. */}
+              <Route>
+                <h1>404</h1>
+              </Route>
+            </Switch>
+            <Footer />
+          </div>
+        </Router>}
+      </>
   );
 }
 

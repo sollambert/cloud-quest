@@ -9,6 +9,8 @@ function RoomEditor({ room, cancel }) {
     const errors = useSelector(store => store.errors);
     const textAreaRef = useRef(null);
     const [cursor, setCursor] = useState(-1);
+    const [checkDelete, setCheckDelete] = useState(false);
+    const [deleteInput, setDeleteInput] = useState('');
 
     const [roomInfo, setRoomInfo] = useState({
         id: -1,
@@ -46,6 +48,12 @@ function RoomEditor({ room, cancel }) {
         if ((e.ctrlKey || e.metaKey) && e.key == 's') {
             e.preventDefault();;
             saveRoom();
+        }
+    }
+
+    const handleDeleteKeydown = (e) => {
+        if (e.key == 'Enter') {
+            deleteRoom();
         }
     }
 
@@ -161,13 +169,32 @@ function RoomEditor({ room, cancel }) {
                     <button className="btn" onClick={cancel}>GO BACK</button>
                 </div>
                 {roomInfo.id != -1 ?
-
-                    <div style={{ alignSelf: "right" }}>
-                        <button
-                            style={{ backgroundColor: "red", alignSelf: "right" }}
-                            className="btn"
-                            onClick={deleteRoom}>DELETE</button>
-                    </div>
+                    <>
+                        {checkDelete ?
+                            <div>
+                                <label>Are you sure? Type '{room.name}' to confirm:</label>
+                                <input
+                                    type="text"
+                                    value={deleteInput}
+                                    onChange={e => setDeleteInput(e.target.value)}
+                                    onKeyDown={handleDeleteKeydown} />
+                                <div>
+                                    <button
+                                        style={{ backgroundColor: "red"}}
+                                        className="btn" onClick={deleteRoom}>DELETE</button>
+                                    <button
+                                        className="btn"
+                                        onClick={() => setCheckDelete(false)}>
+                                        CANCEL
+                                    </button>
+                                </div>
+                            </div>
+                            :
+                            <button
+                                style={{ backgroundColor: "red", alignSelf: "right" }}
+                                className="btn"
+                                onClick={()=>setCheckDelete(true)}>DELETE</button>}
+                    </>
                     : ''}
             </div>
         </div>

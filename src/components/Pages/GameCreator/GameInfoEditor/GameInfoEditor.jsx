@@ -79,6 +79,17 @@ function GameInfoEditor({ game, items }) {
                         />
                     </div>
                     <div>
+                        <div>
+                            <label htmlFor="description">Description: </label>
+                        </div>
+                        <textarea
+                            style={{ height: "5vw" }}
+                            name="description" className={"editor-textarea"}
+                            value={gameInfo.description}
+                            onChange={e => handleGameInfoChange(e, "description")}
+                        />
+                    </div>
+                    <div>
                         <label htmlFor="game-start">Start Location:</label>
                         <input
                             style={{ width: "10vw", height: "2em" }}

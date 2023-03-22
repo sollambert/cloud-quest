@@ -19,8 +19,8 @@ WHERE g.id = $1 AND r.game_id = $1 AND r.id = $2 AND g.user_id = $3;`;
 
 router.post('/create', rejectUnauthenticated, async (req, res) => {
     console.log(req.body)
-    const newGame = `INSERT INTO games ("name", "start_location","user_id","inventory")
-        VALUES ($1, '', $2, '[]')
+    const newGame = `INSERT INTO games ("name", "description","start_location","user_id","inventory")
+        VALUES ($1, '', '', $2, '[]')
         RETURNING id;`
 
     const connection = await pool.connect();
@@ -47,7 +47,7 @@ router.post('/create', rejectUnauthenticated, async (req, res) => {
 router.get('/:id', rejectUnauthenticated, async (req, res) => {
 
     const gameQuery = `
-    SELECT g.id, g.name, g.start_location, g.inventory from games g
+    SELECT g.id, g.name, g.description, g.start_location, g.inventory from games g
     WHERE g.id = $1 AND g.user_id = $2;`
 
     const roomQuery = `
@@ -137,8 +137,8 @@ router.put('/info/:game_id', rejectUnauthenticated, async (req, res) => {
 
     const updateQuery = `
     UPDATE games
-    SET name = $1, start_location = $2, inventory = $3
-    WHERE user_id = $4 AND id = $5;`
+    SET name = $1, description = $2, start_location = $3, inventory = $4
+    WHERE user_id = $5 AND id = $6;`
 
     const connection = await pool.connect();
 
@@ -148,7 +148,7 @@ router.put('/info/:game_id', rejectUnauthenticated, async (req, res) => {
         if (ownership.rows == 0) {
             throw forbidden;
         } else {
-            await connection.query(updateQuery, [req.body.name, req.body.start_location, `[${req.body.inventory}]`, req.user.id, req.params.game_id]);
+            await connection.query(updateQuery, [req.body.name, req.body.description, req.body.start_location, `[${req.body.inventory}]`, req.user.id, req.params.game_id]);
         }
         await connection.query('COMMIT');
         res.sendStatus(201);

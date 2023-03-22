@@ -78,6 +78,9 @@ function GameSelector() {
                             NAME
                         </th>
                         <th>
+                            DESCRIPTION
+                        </th>
+                        <th>
                             AUTHOR
                         </th>
                         <th colSpan={2}></th>
@@ -86,8 +89,9 @@ function GameSelector() {
                 <tbody>
                     {games.map((game) => {
                         return (<tr key={game.id}>
-                            <td>{game.name}</td>
-                            <td>{game.author}</td>
+                            <td style={{width: "10vw"}}>{game.name}</td>
+                            <td>{game.description}</td>
+                            <td style={{width: "10vw"}}>{game.author}</td>
                             <td className='btn-td' colSpan={(user.username == game.author ? 2 : 1)}>
                                 <button className="btn" onClick={(e) => handleSelect(e, game.id)}>PLAY</button>
                             </td>

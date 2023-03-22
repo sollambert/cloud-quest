@@ -7,6 +7,7 @@ import savesSaga from './saves.saga';
 import gameStateSaga from './gameState.saga';
 import gameSelectorSaga from './gameSelector.saga';
 import gameCreatorSaga from './gameCreator.saga';
+import deploySaga from './deploy.saga';
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -25,5 +26,6 @@ export default function* rootSaga() {
     gameStateSaga(),
     gameSelectorSaga(),
     gameCreatorSaga(),
+    deploySaga(),
   ]);
 }

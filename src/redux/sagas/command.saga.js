@@ -47,14 +47,16 @@ function* parseCommand(message) {
                 return response;
             } if (room.exits.includes(split[1])) {
                 response.messages.push(`You go to the ${split[1]}.`)
-                response.callback = () => put({
-                    type: "UPDATE_LOCATION",
-                    payload: gameState.rooms.filter((room) => {
-                        if (room.name == split[1]) {
-                            return room
-                        }
-                    })[0]
-                })
+                response.callback = function* () {
+                    yield put({
+                        type: "UPDATE_LOCATION",
+                        payload: gameState.rooms.filter((room) => {
+                            if (room.name == split[1]) {
+                                return room
+                            }
+                        })[0]
+                    })
+                }
                 return response;
             } else {
                 response.messages.push(`You don't know how to get there.`)
@@ -77,7 +79,7 @@ function* parseCommand(message) {
                     response = handleOpen(interactIndex, room, response);
                 }
             }
-            if (!opened)  {
+            if (!opened) {
                 response.messages.push(`You can't open the ${split[1]} any further.`)
             }
             return response;
@@ -300,7 +302,7 @@ function handleInteraction(roomIndex, room, interactIndex, interactable, respons
     }
     //new exits for room that user is in. will overwrite old exits
     if (interactable[key]?.new_exits) {
-                gameState.rooms[roomIndex].exits = interactable[key].new_exits;
+        gameState.rooms[roomIndex].exits = interactable[key].new_exits;
     }
     //sets various gamestate variables for global state. must be and object, the keys of which designate which variables to update with their corresponding value
     if (interactable[key]?.set_var) {
@@ -331,9 +333,16 @@ function handleInteraction(roomIndex, room, interactIndex, interactable, respons
         delete gameState.rooms[roomIndex].interactables[interactIndex][key];
     }
     //callback for saga to set current gamestate to modified gamestate object
-    response.callback = () => {
-        put({ type: 'SET_GAME_STATE', payload: gameState })
+    response.callback = function* () {
+        yield put({ type: 'SET_GAME_STATE', payload: gameState })
     };
+    //deploy calculator application
+    if (interactable[key]?.deploy == "calculator") {
+        response.callback = function* () {
+            yield put({ type: "DEPLOY_CALCULATOR" });
+            yield put({ type: 'SET_GAME_STATE', payload: gameState })
+        }
+    }
     return response;
 }
 
@@ -350,8 +359,8 @@ function takeItem(item, room, response) {
         }
     }
     gameState.inventory.push(item.id);
-    response.callback = () => {
-        put({ type: 'SET_GAME_STATE', payload: gameState })
+    response.callback = function* () {
+        yield put({ type: 'SET_GAME_STATE', payload: gameState })
     };
     return response;
 }

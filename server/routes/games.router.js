@@ -18,7 +18,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
                 : queryParams.name}%'`
             : queryParams.author ? `WHERE u.username LIKE '%${queryParams.author}%'` : ''}`;
     const query = `
-    SELECT g.id, g.name, u.username as author FROM games g
+    SELECT g.id, g.description, g.name, u.username as author FROM games g
     JOIN "user" u ON g.user_id = u.id
     ${conditional}
     ORDER by g.id LIMIT 10;`

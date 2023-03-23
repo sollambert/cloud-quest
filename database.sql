@@ -55,6 +55,7 @@ CREATE TABLE "saves" (
 CREATE TABLE "games" (
 	"id" serial NOT NULL,
 	"name" varchar(256) NOT NULL,
+	"description" varchar(1024) NOT NULL,
 	"start_location" varchar(256) NOT NULL,
 	"user_id" int NOT NULL,
 	"inventory" JSON NOT NULL,
@@ -78,8 +79,8 @@ insert into "user" ("username", "password")
 VALUES('admin', '$2a$10$eXaya1.jTeVgi2p1QmyeJ.bOG4B3TOdwpGKTTLXeDqkdFCvcxWhnK');
 
 --insert game info for cloud-quest
-insert into games ("name", "start_location", "inventory", "user_id")
-VALUES('cloud-quest', 'car', '[]', 1);
+insert into games ("name", "description", "start_location", "inventory", "user_id")
+VALUES('cloud-quest', 'Your family''s datacenter went down and you''ve been tasked with uploading your calculator app to the cloud! Go on an adventure through your childhood home and save the world''s basic calculations.','car', '[]', 1);
 
 --generate all rooms for cloudquest
 insert into rooms ("name", "game_id", "description", "image", "interactables", "exits")

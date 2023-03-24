@@ -231,10 +231,13 @@ function useItem(interactIndex, itemId, room, response) {
     }
 
     if (response.removeItem) {
+        let found = false;
         gameState.inventory = gameState.inventory.filter((invId) => {
-            if (invId != itemId) {
+            if (invId != itemId || found) {
                 return invId
-            };
+            } else {
+                found = true;
+            }
         })
     }
     return response;

@@ -17,7 +17,8 @@ import GameSelector from '../Pages/GameSelector/GameSelector';
 
 function ProtectedRoute({ component, children, ...props }) {
   const user = useSelector((store) => store.user);
-  const game_id = useSelector((store) => store.gameState.game_id)
+  let game_id = useSelector((store) => store?.gameState?.game_id)
+  if (game_id == undefined) {game_id = useSelector((store) => store?.gameCreator?.gameInfo?.id)}
 
   // Component may be passed in as a "component" prop,
   // or as a child component.
@@ -30,7 +31,7 @@ function ProtectedRoute({ component, children, ...props }) {
       // are now passed along to the 'Route' Component
       {...props}
     >
-      {user.id && game_id ?
+      {user.id && (game_id) ?
         // If the user is logged in, show the protected component
         <ProtectedComponent />
         :

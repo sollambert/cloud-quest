@@ -47,11 +47,20 @@ function* fetchGameEditDetails(action) {
     }
 }
 
+function* clearGameEditDetails(action) {
+    try {
+        yield put({type: "CLEAR_EDITOR_INFO"});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 //watcher saga
 function* watcherSaga() {
     yield takeEvery("FETCH_GAMES", fetchGames);
     yield takeEvery("SELECT_GAME", selectGame);
     yield takeEvery("FETCH_GAME_EDIT_DETAILS", fetchGameEditDetails);
+    yield takeEvery("CLEAR_GAME_EDIT_DETAILS", clearGameEditDetails);
 }
 
 export default watcherSaga;

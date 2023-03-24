@@ -7,10 +7,11 @@ import { useSelector } from 'react-redux';
 function Nav() {
   const user = useSelector((store) => store.user);
   const gameState = useSelector((store) => store.gameState);
+  const gameCreator = useSelector((store) => store.gameCreator);
 
   return (
     <div className="nav">
-      <Link to="/home">
+      <Link to="/about">
         <h2 className="nav-title">CloudQuest</h2>
       </Link>
       <div>
@@ -25,8 +26,8 @@ function Nav() {
         {/* If a user is logged in, show these links */}
         {user.id && gameState.game_id && (
           <>
-            <Link className="navLink" to="/home">
-              Home
+            <Link className="navLink" to="/play">
+              Play
             </Link>
 
             {/* link to help page */}
@@ -46,14 +47,15 @@ function Nav() {
 
           </>
         )}
-
-        {/* {user.id && gameState.game_id == undefined && ( */}
+        {gameCreator?.gameInfo?.id && (
+          <Link className="navLink" to="/help">
+            Help
+          </Link>
+        )}
         {user.id && (
-          <>
-            <Link className="navLink" to="/games">
-              Games
-            </Link>
-          </>
+          <Link className="navLink" to="/games">
+            Games
+          </Link>
         )}
         <Link className="navLink" to="/about">
           About

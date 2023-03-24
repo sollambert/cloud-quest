@@ -29,6 +29,7 @@ function* loadGame(action) {
             type: 'ADD_HISTORY',
             payload: roomDescription
         })
+        yield action.callback();
     } catch (error) {
         console.error(error);
     }

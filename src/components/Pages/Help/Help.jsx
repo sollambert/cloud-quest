@@ -1,6 +1,13 @@
 import './Help.css'
+import { useHistory } from 'react-router-dom';
 
 function Help() {
+
+    const history = useHistory();
+
+    const goBack = () => {
+        history.goBack();
+    }
     return (
         <div>
             <table>
@@ -73,6 +80,9 @@ function Help() {
                     </tr>
                 </tbody>
             </table>
+            <div>
+                <button className="btn" onClick={goBack}>RETURN</button>
+            </div>
         </div>
     )
 }

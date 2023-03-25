@@ -40,8 +40,6 @@ function App() {
     dispatch({ type: 'FETCH_USER' });
   }, [dispatch]);
 
-  console.log(gameCreator?.gameInfo?.id);
-
   return (
     <>
       {/* {user.loading ?

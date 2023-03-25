@@ -23,7 +23,7 @@ function GameCreator() {
 
     const play = () => {
         dispatch({ type: "SELECT_GAME", payload: game_id });
-        history.push("/home");
+        history.push("/play");
     }
 
     useEffect(() => {

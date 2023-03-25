@@ -7,8 +7,8 @@ const router = express.Router();
 const forbidden = new Error('User does not have ownership of game');
 forbidden.code = 403;
 
-router.post('/deploy', rejectUnauthenticated, async (req, res) => {
-
+router.get('/', rejectUnauthenticated, async (req, res) => {
+    res.send({url: 'https://sleepy-inlet-11604.herokuapp.com/'});
 })
 
 module.exports = router;

@@ -77,7 +77,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-<img src="documentation/images/cloud_quest_screenshot.png" alt="Logo" width="80" height="80">
+<img src="documentation/images/cloud_quest_screenshot.png" alt="Logo">
 
 CloudQuest was developed as a solo capstone project to demonstrate the skills I learned through Prime Digital Academy.
 

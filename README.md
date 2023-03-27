@@ -77,8 +77,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Cloud Quest Screen Shot][product-screenshot]](https://github.com/sollambert/cloud-quest)
+<img src="documentation/images/cloud_quest_screenshot.png" alt="Logo" width="80" height="80">
 
 CloudQuest was developed as a solo capstone project to demonstrate the skills I learned through Prime Digital Academy.
 

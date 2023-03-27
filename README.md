@@ -26,7 +26,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sollambert/cloudquest">
+  <a href="https://github.com/sollambert/cloud-quest">
     <img src="images/CloudQuest.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -35,14 +35,14 @@
   <p align="center">
     CloudQuest is a platform for developing your own text-based adventure games and sharing them with others. Feel free to play the provided game 'CloudQuest' to get a feel for the gameplay and when you're ready, go ahead and create a new game under your account and get to tinkering.
     <br />
-    <a href="https://github.com/sollambert/cloudquest"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/sollambert/cloud-quest"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/sollambert/cloudquest">Live Deployment</a>
+    <a href="https://github.com/sollambert/cloud-quest">Live Deployment</a>
     ·
-    <a href="https://github.com/sollambert/cloudquest/issues">Report Bug</a>
+    <a href="https://github.com/sollambert/cloud-quest/issues">Report Bug</a>
     ·
-    <a href="https://github.com/sollambert/cloudquest/issues">Request Feature</a>
+    <a href="https://github.com/sollambert/cloud-quest/issues">Request Feature</a>
   </p>
 </div>
 
@@ -119,7 +119,7 @@ To install the dependencies, make sure you're running at least version 18 of Nod
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/sollambert/cloudquest.git
+   git clone https://github.com/sollambert/cloud-quest.git
    ```
 2. Install NPM packages
    ```sh
@@ -139,7 +139,7 @@ To install the dependencies, make sure you're running at least version 18 of Nod
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the help pages on the CloudQuest website. [CloudQuest](https://cloudquest.heroku.com)_
+_For more examples, please refer to the help pages on the CloudQuest website. [CloudQuest](https://cloud-quest.heroku.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -197,7 +197,7 @@ Project Link: [Deployment](https://cloudquest.heroku.com)
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [license-shield]: https://img.shields.io/github/license/sollambert/CloudQuest.svg?style=for-the-badge
-[license-url]: https://github.com/sollambert/CloudQuest/blob/main/LICENSE.txt
+[license-url]: https://github.com/sollambert/CloudQuest/blob/main/LICENSE.TXT
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/sollambert
 [p5.js]: https://img.shields.io/badge/p5.js-30333a?style=for-the-badge&logo=p5dotjs&logoColor=F3245C

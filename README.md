@@ -224,7 +224,7 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [Express-url]: https://expressjs.com/
 [postgres]: https://img.shields.io/badge/Postgres-30333a?style=for-the-badge&logo=postgresql&logoColor=2C6790
 [postgres-url]: https://www.postgresql.org/
-[Redux]: https://img.shields.io/badge/Postgres-30333a?style=for-the-badge&logo=postgresql&logoColor=7747BA
+[Redux]: https://img.shields.io/badge/Redux-30333a?style=for-the-badge&logo=redux&logoColor=7747BA
 [Redux-url]: https://redux.js.org/
 [Reduxsaga]: https://img.shields.io/badge/Redux-Sagas-30333a?style=for-the-badge&logo=reduxsaga&logoColor=82D473
 [Reduxsaga-url]: https://redux-saga.js.org/

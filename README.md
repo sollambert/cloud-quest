@@ -38,7 +38,7 @@
     <a href="https://github.com/sollambert/cloud-quest"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/sollambert/cloud-quest">Live Deployment</a>
+    <a href="https://cloudquest.herokuapp.com">Live Deployment</a>
     ·
     <a href="https://github.com/sollambert/cloud-quest/issues">Report Bug</a>
     ·
@@ -176,7 +176,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Solomon Lambert - https://github.com/sollambert
 
-Project Link: [Deployment](https://cloudquest.heroku.com)
+Project Link: [Deployment](https://cloudquest.herokuapp.com)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

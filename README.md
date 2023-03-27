@@ -89,8 +89,14 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [![p5][p5.js]][p5js-url]
+* [![Node.js][Node.js]][Node-url]
+* [![Express][Express.js]][Express-url]
 * [![React][React.js]][React-url]
+* [![Redux][Redux]][Redux-url]
+* [![Redux-Saga][Reduxsaga.js]][Reduxsaga-url]
+* [![p5][p5.js]][p5-url]
+* [![Postgres][postgres]][postgres-url]
+* [![Heroku][heroku]][heroku-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -211,6 +217,18 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/sollambert
 [p5.js]: https://img.shields.io/badge/p5.js-30333a?style=for-the-badge&logo=p5dotjs&logoColor=F3245C
-[p5js-url]: https://p5js.org/
+[p5-url]: https://p5js.org/
+[Node.js]: https://img.shields.io/badge/Node.js-30333a?style=for-the-badge&logo=nodedotjs&logoColor=F3245C
+[Node-url]: https://p5js.org/
+[Express.js]: https://img.shields.io/badge/Express.js-30333a?style=for-the-badge&logo=express&logoColor=36CAFC
+[Express-url]: https://expressjs.com/
+[postgres]: https://img.shields.io/badge/Postgres-30333a?style=for-the-badge&logo=postgresql&logoColor=2C6790
+[postgres-url]: https://www.postgresql.org/
+[Redux]: https://img.shields.io/badge/Postgres-30333a?style=for-the-badge&logo=postgresql&logoColor=7747BA
+[Redux-url]: https://redux.js.org/
+[Reduxsaga]: https://img.shields.io/badge/Redux-Sagas-30333a?style=for-the-badge&logo=reduxsaga&logoColor=82D473
+[Reduxsaga-url]: https://redux-saga.js.org/
+[heroku]: https://img.shields.io/badge/Heroku-30333a?style=for-the-badge&logo=postgresql&logoColor=604888
+[heroku-url]: https://www.heroku.com/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/

@@ -196,8 +196,8 @@ Project Link: [Deployment](https://cloudquest.heroku.com)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[license-shield]: https://img.shields.io/github/license/sollambert/CloudQuest.svg?style=for-the-badge
-[license-url]: https://github.com/sollambert/CloudQuest/blob/main/LICENSE.TXT
+[license-shield]: https://img.shields.io/github/license/sollambert/cloud-quest.svg?style=for-the-badge
+[license-url]: https://github.com/sollambert/cloud-quest/blob/main/LICENSE.TXT
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/sollambert
 [p5.js]: https://img.shields.io/badge/p5.js-30333a?style=for-the-badge&logo=p5dotjs&logoColor=F3245C

@@ -78,7 +78,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Cloud Quest Screen Shot][product-screenshot]](https://example.com)
+[![Cloud Quest Screen Shot][product-screenshot]](https://github.com/sollambert/cloud-quest)
 
 CloudQuest was developed as a solo capstone project to demonstrate the skills I learned through Prime Digital Academy.
 
@@ -197,7 +197,7 @@ Project Link: [Deployment](https://cloudquest.heroku.com)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: https://https://github.com/sollambert/cloud-quest/documentation/images/cloud_quest_screenshot.png
+[product-screenshot]: https://https://github.com/sollambert/cloud-quest/blob/main/documentation/images/cloud_quest_screenshot.png
 [license-shield]: https://img.shields.io/github/license/sollambert/cloud-quest.svg?style=for-the-badge
 [license-url]: https://github.com/sollambert/cloud-quest/blob/main/LICENSE.TXT
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555

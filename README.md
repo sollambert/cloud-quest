@@ -26,23 +26,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/sollambert/cloudquest">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">CloudQuest</h3>
 
   <p align="center">
-    project_description
+    CloudQuest is a platform for developing your own text-based adventure games and sharing them with others. Feel free to play the provided game 'CloudQuest' to get a feel for the gameplay and when you're ready, go ahead and create a new game under your account and get to tinkering.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/sollambert/cloudquest"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/sollambert/cloudquest">Live Deployment</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    <a href="https://github.com/sollambert/cloudquest/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/sollambert/cloudquest/issues">Request Feature</a>
   </p>
 </div>
 
@@ -81,7 +81,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `sollambert`, `cloudquest`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `CloudQuest`, `project_description`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -110,7 +110,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+To install the dependencies, make sure you're running at least version 18 of Node.
 * npm
   ```sh
   npm install npm@latest -g
@@ -118,18 +118,17 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/sollambert/cloudquest.git
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
+3. Enter your session secret in `.env`, this should be a randomly generated string of at least 16 characters.
    ```js
-   const API_KEY = 'ENTER YOUR API';
+   SERVER_SESSION_SECRET = '<random string of characters>';
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -155,7 +154,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Feature 3
     - [ ] Nested Feature
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/sollambert/cloudquest/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -193,7 +192,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/sollambert/cloudquest](https://github.com/sollambert/cloudquest)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

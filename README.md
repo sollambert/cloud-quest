@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/sollambert/cloud-quest">
-    <img src="documentation/images/CloudQuest.png" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/sollambert/cloud-quest/main/documentation/images/CloudQuest.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">CloudQuest</h3>
@@ -60,7 +60,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-<img src="documentation/images/cloud_quest_screenshot.png" alt="Logo">
+<img src="https://raw.githubusercontent.com/sollambert/cloud-quest/main/documentation/images/cloud_quest_screenshot.png" alt="Logo">
 
 CloudQuest was developed as a solo capstone project to demonstrate the skills I learned through Prime Digital Academy.
 

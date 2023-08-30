@@ -1,9 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 function Saves() {
 
     const dispatch = useDispatch();
+    const history = useHistory();
     const saveData = useSelector(store => store.saves);
 
     useEffect(() => {
@@ -25,7 +27,10 @@ function Saves() {
     }
 
     const loadSave = (id) => {
-        dispatch({type: "LOAD_SAVE", payload: id})
+        dispatch({type: "LOAD_SAVE", payload: id, callback: () => {
+            history.push('/play');
+        }})
+
     }
 
     return (

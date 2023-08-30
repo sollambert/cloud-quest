@@ -5,6 +5,8 @@ const gameCreatorReducer = (state = {}, action) => {
     switch(action.type) {
         case "SET_EDITOR_INFO":
             return action.payload;
+        case "CLEAR_EDITOR_INFO":
+            return {};
         default:
             return state;
     }

@@ -17,7 +17,8 @@ import AboutPage from '../Pages/AboutPage/AboutPage';
 import LoginPage from '../Pages/LoginPage/LoginPage';
 import RegisterPage from '../Pages/RegisterPage/RegisterPage';
 import Home from '../Pages/Home/Home';
-import Help from '../Pages/Help/Help';
+import GameHelp from '../Pages/Help/Help';
+import EditorHelp from '../Pages/GameCreator/Help/Help';
 import Saves from '../Pages/Saves/Saves';
 import Inventory from '../Pages/Inventory/Inventory';
 import GameSelector from '../Pages/GameSelector/GameSelector';
@@ -33,6 +34,7 @@ function App() {
 
   const user = useSelector(store => store.user);
   const gameState = useSelector(store => store.gameState);
+  const gameCreator = useSelector(store => store.gameCreator);
 
   useEffect(() => {
     dispatch({ type: 'FETCH_USER' });
@@ -66,7 +68,7 @@ function App() {
               <ProtectedRoute
                 // logged in shows UserPage else shows LoginPage
                 exact
-                path="/home"
+                path="/play"
               >
                 <Home />
               </ProtectedRoute>
@@ -87,12 +89,13 @@ function App() {
                 <Saves />
               </ProtectedRoute>
 
-              {/* Brings user to help view during gameplay */}
+              {/* Brings user to help view */}
               <ProtectedRoute
                 exact
                 path="/help"
               >
-                <Help />
+                {gameState.game_id && <GameHelp />}
+                {gameCreator?.gameInfo?.id && <EditorHelp />}
               </ProtectedRoute>
 
 
@@ -127,7 +130,7 @@ function App() {
                 {user.id ?
                   <>
                     {gameState.id ?
-                      <Redirect to="/home" />
+                      <Redirect to="/play" />
                       :
                       <GameSelector />
                     }

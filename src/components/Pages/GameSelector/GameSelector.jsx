@@ -15,6 +15,8 @@ function GameSelector() {
 
     useEffect(() => {
         dispatch({ type: "FETCH_GAMES" });
+        dispatch({ type: "CLEAR_GAME_STATE" });
+        dispatch({ type: "CLEAR_GAME_EDIT_DETAILS" });
     }, []);
 
     const clearInput = () => {
@@ -23,7 +25,7 @@ function GameSelector() {
 
     const handleSelect = (e, id) => {
         dispatch({ type: "SELECT_GAME", payload: id });
-        history.push("/home");
+        history.push("/play");
     }
 
     const handleSubmit = (e) => {

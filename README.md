@@ -1,121 +1,200 @@
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a name="readme-top"></a>
 
-# Prime Solo Project Starting Repo
-This version uses React, Redux, Express, Passport, and PostgreSQL (a full list of dependencies can be found in `package.json`).
-
-We **STRONGLY** recommend following these instructions carefully. It's a lot, and will take some time to set up, but your life will be much easier this way in the long run.
-
-## Use the Template for This Repository (Don't Clone)
-
-- Don't Fork or Clone. Instead, click the `Use this Template` button, and make a copy to your personal account. Make the project `PUBLIC`!
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-## Prerequisites
 
-Before you get started, make sure you have the following software installed on your computer:
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/sollambert/cloud-quest">
+    <img src="https://raw.githubusercontent.com/sollambert/cloud-quest/main/documentation/images/CloudQuest.png" alt="Logo" width="80" height="80">
+  </a>
 
-- [Node.js](https://nodejs.org/en/)
-- [PostrgeSQL](https://www.postgresql.org/)
-- [Nodemon](https://nodemon.io/)
+<h3 align="center">CloudQuest</h3>
 
-## Create database and table
+  <p align="center">
+    CloudQuest is a platform for developing your own text-based adventure games and sharing them with others. Feel free to play the provided game 'CloudQuest' to get a feel for the gameplay and when you're ready, go ahead and create a new game under your account and get to tinkering.
+    <br />
+    <a href="https://github.com/sollambert/cloud-quest"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://cloudquest.herokuapp.com">Live Deployment</a>
+    ·
+    <a href="https://github.com/sollambert/cloud-quest/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/sollambert/cloud-quest/issues">Request Feature</a>
+  </p>
+</div>
 
-Create a new database called `prime_app` and create a `user` table:
 
-```SQL
-CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
-);
-```
 
-If you would like to name your database something else, you will need to change `prime_app` to the name of your new database name in `server/modules/pool.js`
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-## Development Setup Instructions
 
-- Run `npm install`
-- Create a `.env` file at the root of the project and paste this line into the file:
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+<img src="https://raw.githubusercontent.com/sollambert/cloud-quest/main/documentation/images/cloud_quest_screenshot.png" alt="Logo">
+
+CloudQuest was developed as a solo capstone project to demonstrate the skills I learned through Prime Digital Academy.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+### Built With
+
+* [![Node.js][Node.js]][Node-url]
+* [![Express][Express.js]][Express-url]
+* [![React][React.js]][React-url]
+* [![Redux][Redux]][Redux-url]
+* [![Redux-Saga][Reduxsaga]][Reduxsaga-url]
+* [![p5][p5.js]][p5-url]
+* [![Postgres][postgres]][postgres-url]
+* [![Heroku][heroku]][heroku-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+To install the dependencies, make sure you're running at least version 18 of Node.
+* npm
+  ```sh
+  npm install npm@latest -g
   ```
-  SERVER_SESSION_SECRET=superDuperSecret
-  ```
-  While you're in your new `.env` file, take the time to replace `superDuperSecret` with some long random string like `25POUbVtx6RKVNWszd9ERB9Bb6` to keep your application secure. Here's a site that can help you: [https://passwordsgenerator.net/](https://passwordsgenerator.net/). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm run server`
-- Run `npm run client`
-- Navigate to `localhost:3000`
 
-## Debugging
+### Installation
 
-To debug, you will need to run the client-side separately from the server. Start the client by running the command `npm run client`. Start the debugging server by selecting the Debug button.
+1. Clone the repo
+   ```sh
+   git clone https://github.com/sollambert/cloud-quest.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+3. Enter your session secret in `.env`, this should be a randomly generated string of at least 16 characters.
+   ```js
+   SERVER_SESSION_SECRET = '<random string of characters>';
+   ```
 
-![VSCode Toolbar](documentation/images/vscode-toolbar.png)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Then make sure `Launch Program` is selected from the dropdown, then click the green play arrow.
 
-![VSCode Debug Bar](documentation/images/vscode-debug-bar.png)
 
-## Testing Routes with Postman
+<!-- USAGE EXAMPLES -->
+## Usage
 
-To use Postman with this repo, you will need to set up requests in Postman to register a user and login a user at a minimum.
+_For game-creator examples, please refer to the help pages on the CloudQuest website. [CloudQuest](https://cloudquest.heroku.com)_
 
-Keep in mind that once you using the login route, Postman will manage your session cookie for you just like a browser, ensuring it is sent with each subsequent request. If you delete the `localhost` cookie in Postman, it will effectively log you out.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-1. Start the server - `npm run server`
-2. Import the sample routes JSON file [v2](./PostmanPrimeSoloRoutesv2.json) by clicking `Import` in Postman. Select the file.
-3. Click `Collections` and `Send` the following three calls in order:
-   1. `POST /api/user/register` registers a new user, see body to change username/password
-   2. `POST /api/user/login` will login a user, see body to change username/password
-   3. `GET /api/user` will get user information, by default it's not very much
 
-After running the login route above, you can try any other route you've created that requires a logged in user!
 
-## Production Build
+<!-- CONTRIBUTING -->
+## Contributing
 
-Before pushing to Heroku, run `npm run build` in terminal. This will create a build folder that contains the code Heroku will be pointed at. You can test this build by typing `npm start`. Keep in mind that `npm start` will let you preview the production build but will **not** auto update.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm start`
-- Navigate to `localhost:5000`
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-## Lay of the Land
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-There are a few videos linked below that show a walkthrough the client and sever setup to help acclimatize to the boilerplate. Please take some time to watch the videos in order to get a better understanding of what the boilerplate is like.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-- [Initial Set](https://vimeo.com/453297271)
-- [Server Walkthrough](https://vimeo.com/453297212)
-- [Client Walkthrough](https://vimeo.com/453297124)
 
-Directory Structure:
 
-- `src/` contains the React application
-- `public/` contains static assets for the client-side
-- `build/` after you build the project, contains the transpiled code from `src/` and `public/` that will be viewed on the production site
-- `server/` contains the Express App
+<!-- LICENSE -->
+## License
 
-This code is also heavily commented. We recommend reading through the comments, getting a lay of the land, and becoming comfortable with how the code works before you start making too many changes. If you're wondering where to start, consider reading through component file comments in the following order:
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-- src/components
-  - App/App
-  - Footer/Footer
-  - Nav/Nav
-  - AboutPage/AboutPage
-  - InfoPage/InfoPage
-  - UserPage/UserPage
-  - LoginPage/LoginPage
-  - RegisterPage/RegisterPage
-  - LogOutButton/LogOutButton
-  - ProtectedRoute/ProtectedRoute
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Deployment
 
-1. Create a new Heroku project
-1. Link the Heroku project to the project GitHub Repo
-1. Create an Heroku Postgres database
-1. Connect to the Heroku Postgres database from Postico
-1. Create the necessary tables
-1. Add an environment variable for `SERVER_SESSION_SECRET` with a nice random string for security
-1. In the deploy section, select manual deploy
 
-## Update Documentation
+<!-- CONTACT -->
+## Contact
 
-Customize this ReadMe and the code comments in this project to read less like a starter repo and more like a project. Here is an example: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
+Solomon Lambert - https://github.com/sollambert
+
+Project Link: [Deployment](https://cloudquest.herokuapp.com)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+* My family who have supported my initiative to follow my passion for programming
+* My friends who have helped keep me sane during the Prime full stack program
+* My wonderful instructors throughout the program: Kris Szafranski, Edan Schwartz, Dane Smith, Key Clark, and Vada Karlen
+* My dog Ellie who kept me company all winter while I was spending endless hours troubleshooting bugs
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[product-screenshot]: https://https://github.com/sollambert/cloud-quest/blob/main/documentation/images/cloud_quest_screenshot.png
+[license-shield]: https://img.shields.io/github/license/sollambert/cloud-quest.svg?style=for-the-badge
+[license-url]: https://github.com/sollambert/cloud-quest/blob/main/LICENSE.TXT
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/sollambert
+[p5.js]: https://img.shields.io/badge/p5.js-30333a?style=for-the-badge&logo=p5dotjs&logoColor=F3245C
+[p5-url]: https://p5js.org/
+[Node.js]: https://img.shields.io/badge/Node.js-30333a?style=for-the-badge&logo=nodedotjs&logoColor=4FA34D
+[Node-url]: https://nodejs.org/
+[Express.js]: https://img.shields.io/badge/Express.js-30333a?style=for-the-badge&logo=express&logoColor=36CAFC
+[Express-url]: https://expressjs.com/
+[postgres]: https://img.shields.io/badge/Postgres-20232A?style=for-the-badge&logo=postgresql&logoColor=2C6790
+[postgres-url]: https://www.postgresql.org/
+[Redux]: https://img.shields.io/badge/Redux-30333a?style=for-the-badge&logo=redux&logoColor=7747BA
+[Redux-url]: https://redux.js.org/
+[Reduxsaga]: https://img.shields.io/badge/Redux-Sagas-30333a?style=for-the-badge&logo=reduxsaga&logoColor=82D473
+[Reduxsaga-url]: https://redux-saga.js.org/
+[heroku]: https://img.shields.io/badge/Heroku-20232a?style=for-the-badge&logo=heroku&logoColor=604888
+[heroku-url]: https://www.heroku.com/
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/

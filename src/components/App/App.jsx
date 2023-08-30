@@ -40,9 +40,9 @@ function App() {
 
   return (
     <>
-      {user.loading ?
+      {/* {user.loading ?
         ''
-        :
+        : */}
         <Router>
           <div>
             <Nav />
@@ -174,7 +174,8 @@ function App() {
             </Switch>
             <Footer />
           </div>
-        </Router>}
+        </Router>
+        {/* } */}
       </>
   );
 }

@@ -21,7 +21,7 @@
     <a href="https://github.com/sollambert/cloud-quest"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://cloudquest.herokuapp.com">Live Deployment</a>
+    <a href="http://cloudquest.sollambert.com">Live Deployment</a>
     ·
     <a href="https://github.com/sollambert/cloud-quest/issues">Report Bug</a>
     ·
@@ -77,7 +77,6 @@ CloudQuest was developed as a solo capstone project to demonstrate the skills I 
 * [![Redux-Saga][Reduxsaga]][Reduxsaga-url]
 * [![p5][p5.js]][p5-url]
 * [![Postgres][postgres]][postgres-url]
-* [![Heroku][heroku]][heroku-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -119,7 +118,7 @@ To install the dependencies, make sure you're running at least version 18 of Nod
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-_For game-creator examples, please refer to the help pages on the CloudQuest website. [CloudQuest](https://cloudquest.heroku.com)_
+_For game-creator examples, please refer to the help pages on the CloudQuest website. [CloudQuest](http://cloudquest.sollambert.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -157,7 +156,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Solomon Lambert - https://github.com/sollambert
 
-Project Link: [Deployment](https://cloudquest.herokuapp.com)
+Project Link: [Deployment](http://cloudquest.sollambert.com)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -194,7 +193,5 @@ Project Link: [Deployment](https://cloudquest.herokuapp.com)
 [Redux-url]: https://redux.js.org/
 [Reduxsaga]: https://img.shields.io/badge/Redux-Sagas-30333a?style=for-the-badge&logo=reduxsaga&logoColor=82D473
 [Reduxsaga-url]: https://redux-saga.js.org/
-[heroku]: https://img.shields.io/badge/Heroku-20232a?style=for-the-badge&logo=heroku&logoColor=604888
-[heroku-url]: https://www.heroku.com/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/

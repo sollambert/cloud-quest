@@ -21,7 +21,7 @@
     <a href="https://github.com/sollambert/cloud-quest"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="http://cloudquest.sollambert.com">Live Deployment</a>
+    <a href="https://cloudquest.sollambert.com">Live Deployment</a>
     ·
     <a href="https://github.com/sollambert/cloud-quest/issues">Report Bug</a>
     ·
@@ -118,7 +118,7 @@ To install the dependencies, make sure you're running at least version 18 of Nod
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-_For game-creator examples, please refer to the help pages on the CloudQuest website. [CloudQuest](http://cloudquest.sollambert.com)_
+_For game-creator examples, please refer to the help pages on the CloudQuest website. [CloudQuest](https://cloudquest.sollambert.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -156,7 +156,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Solomon Lambert - https://github.com/sollambert
 
-Project Link: [Deployment](http://cloudquest.sollambert.com)
+Project Link: [Deployment](https://cloudquest.sollambert.com)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
